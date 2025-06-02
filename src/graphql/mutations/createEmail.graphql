@@ -1,0 +1,19 @@
+mutation CreateEmail($input: CreateEmailInput!) {
+  createEmail(input: $input) {
+    id
+    userId
+    from
+    to
+    cc
+    bcc
+    preview
+    inboxType
+    isRead
+    hasAttachment
+    importance
+    textBody
+    htmlBody
+    folder
+    createdAt
+  }
+}
