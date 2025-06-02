@@ -1,0 +1,115 @@
+############################
+# Logs
+############################
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+############################
+# Diagnostic reports (Node.js crash dumps)
+############################
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+############################
+# Runtime files
+############################
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+############################
+# Dependency directories
+############################
+node_modules/
+bower_components/
+jspm_packages/
+web_modules/
+
+############################
+# Build outputs
+############################
+dist/
+build/
+out/
+coverage/
+*.lcov
+.nyc_output
+
+############################
+# Tool caches
+############################
+.grunt/
+.cache/
+.parcel-cache/
+.rpt2_cache/
+.rts2_cache_*/
+.docusaurus/
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test/
+
+############################
+# TypeScript
+############################
+*.tsbuildinfo
+
+############################
+# Lint/styling
+############################
+.eslintcache
+.stylelintcache
+
+############################
+# Lock/config/state files
+############################
+.lock-wscript
+.yarn-integrity
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+*.tgz
+
+############################
+# Env files (manejá esto con .env.example si compartís estructura)
+############################
+.env
+.env.local
+.env.*.local
+
+############################
+# Editor/IDE
+############################
+.vscode/
+*.swp
+*.swo
+
+############################
+# Vite / VitePress / VuePress
+############################
+**/.vitepress/cache/
+**/.vitepress/dist/
+.vuepress/dist/
+.temp/
+
+############################
+# Framework-specific outputs
+############################
+.next/
+.nuxt/
+.cache/        # Gatsby, Parcel, etc.
+# public/      # Descomenta si usás Gatsby
+
+############################
+# Otros archivos generados
+############################
+codegen.ts
+.node_repl_history
