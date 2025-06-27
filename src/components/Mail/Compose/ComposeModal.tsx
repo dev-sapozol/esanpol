@@ -2,24 +2,18 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import type { ComposeEmailData } from "../features/mail/types"
-import styles from "./FloatingCompose.module.css"
+import type { ComposeEmailData } from "../../../features/mail/types"
+import styles from "../Compose/ComposeModal.module.css"
 
-interface FloatingComposeProps {
-  isExpanded: boolean
+interface ComposeModalProps {
+  isOpen: boolean
   onToggle: () => void
   onSend: (emailData: ComposeEmailData) => void
   onClose: () => void
   loading?: boolean
 }
 
-const FloatingCompose: React.FC<FloatingComposeProps> = ({
-  isExpanded,
-  onToggle,
-  onSend,
-  onClose,
-  loading = false,
-}) => {
+const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, onClose, loading = false }) => {
   const [emailData, setEmailData] = useState<ComposeEmailData>({
     to: "",
     cc: "",
@@ -33,10 +27,19 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
 
   const [showCc, setShowCc] = useState(false)
   const [showBcc, setShowBcc] = useState(false)
-  const triggerRef = useRef<HTMLButtonElement>(null)
+  const [isExpanded, setIsExpanded] = useState(false)
   const formRef = useRef<HTMLDivElement>(null)
 
-  // Focus management for accessibility
+  // Handle modal state
+  useEffect(() => {
+    if (isOpen && !isExpanded) {
+      setIsExpanded(true)
+    } else if (!isOpen && isExpanded) {
+      setIsExpanded(false)
+    }
+  }, [isOpen, isExpanded])
+
+  // Focus management
   useEffect(() => {
     if (isExpanded && formRef.current) {
       const firstInput = formRef.current.querySelector('input[type="email"]') as HTMLInputElement
@@ -78,37 +81,33 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
 
   const handleClose = () => {
     handleReset()
+    setIsExpanded(false)
     onClose()
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      if (isExpanded) {
-        handleClose()
-      }
+    if (e.key === "Escape" && isExpanded) {
+      handleClose()
     }
   }
 
   return (
-    <div className={`${styles.floatingCompose} ${isExpanded ? styles.expanded : ""}`} onKeyDown={handleKeyDown}>
+    <div className={`${styles.composeModal} ${isExpanded ? styles.expanded : ""}`} onKeyDown={handleKeyDown}>
       {!isExpanded ? (
-        <button
-          ref={triggerRef}
-          className={styles.composeTrigger}
-          onClick={onToggle}
-          aria-label="Compose new email"
-          type="button"
-        >
-          <span className={styles.composeText}>Compose</span>
+        <button className={styles.composeTrigger} onClick={onToggle} aria-label="Compose new email" type="button">
+          <div className={styles.triggerContent}>
+            <span className={styles.triggerText}>Redactar correo</span>
+          </div>
         </button>
       ) : (
         <div ref={formRef} className={styles.composeForm} role="dialog" aria-label="Compose email" aria-modal="true">
+          {/* Header */}
           <header className={styles.composeHeader}>
-            <h2>New Message</h2>
+            <h2>Nuevo mensaje</h2>
             <div className={styles.headerActions}>
               <button
                 className={styles.minimizeBtn}
-                onClick={onToggle}
+                onClick={() => setIsExpanded(false)}
                 aria-label="Minimize compose window"
                 type="button"
               >
@@ -120,16 +119,20 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
             </div>
           </header>
 
+          {/* Form Fields */}
           <div className={styles.composeFields}>
             {/* To Field */}
             <div className={styles.fieldRow}>
-              <label htmlFor="compose-to">To</label>
+              <label htmlFor="compose-to" className={styles.fieldLabel}>
+                Para
+              </label>
               <input
                 id="compose-to"
                 type="email"
                 value={emailData.to}
                 onChange={(e) => handleInputChange("to", e.target.value)}
-                placeholder="Recipients"
+                placeholder="Destinatarios"
+                className={styles.fieldInput}
                 required
                 aria-required="true"
               />
@@ -141,7 +144,7 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
                 )}
                 {!showBcc && (
                   <button onClick={() => setShowBcc(true)} className={styles.fieldToggle} type="button">
-                    Bcc
+                    Cco
                   </button>
                 )}
               </div>
@@ -150,13 +153,16 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
             {/* CC Field */}
             {showCc && (
               <div className={styles.fieldRow}>
-                <label htmlFor="compose-cc">Cc</label>
+                <label htmlFor="compose-cc" className={styles.fieldLabel}>
+                  Cc
+                </label>
                 <input
                   id="compose-cc"
                   type="email"
                   value={emailData.cc}
                   onChange={(e) => handleInputChange("cc", e.target.value)}
-                  placeholder="Carbon copy"
+                  placeholder="Copia"
+                  className={styles.fieldInput}
                 />
                 <button
                   onClick={() => setShowCc(false)}
@@ -172,13 +178,16 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
             {/* BCC Field */}
             {showBcc && (
               <div className={styles.fieldRow}>
-                <label htmlFor="compose-bcc">Bcc</label>
+                <label htmlFor="compose-bcc" className={styles.fieldLabel}>
+                  Cco
+                </label>
                 <input
                   id="compose-bcc"
                   type="email"
                   value={emailData.bcc}
                   onChange={(e) => handleInputChange("bcc", e.target.value)}
-                  placeholder="Blind carbon copy"
+                  placeholder="Copia oculta"
+                  className={styles.fieldInput}
                 />
                 <button
                   onClick={() => setShowBcc(false)}
@@ -193,47 +202,55 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
 
             {/* Subject Field */}
             <div className={styles.fieldRow}>
-              <label htmlFor="compose-subject">Subject</label>
+              <label htmlFor="compose-subject" className={styles.fieldLabel}>
+                Asunto
+              </label>
               <input
                 id="compose-subject"
                 type="text"
                 value={emailData.subject}
                 onChange={(e) => handleInputChange("subject", e.target.value)}
-                placeholder="Subject"
+                placeholder="Asunto del mensaje"
+                className={styles.fieldInput}
                 required
                 aria-required="true"
               />
             </div>
           </div>
 
+          {/* Message Body */}
           <div className={styles.composeBody}>
             <label htmlFor="compose-message" className={styles.visuallyHidden}>
-              Message content
+              Contenido del mensaje
             </label>
             <textarea
               id="compose-message"
               value={emailData.textBody}
               onChange={(e) => handleInputChange("textBody", e.target.value)}
-              placeholder="Compose your message..."
+              placeholder="Escribe tu mensaje aquí..."
+              className={styles.messageTextarea}
               required
               aria-required="true"
             />
           </div>
 
+          {/* Footer */}
           <footer className={styles.composeFooter}>
-            <button className={styles.sendBtn} onClick={handleSend} disabled={loading} type="button">
-              {loading ? "Sending..." : "Send"}
-            </button>
-            <select
-              value={emailData.importance}
-              onChange={(e) => handleInputChange("importance", Number.parseInt(e.target.value))}
-              className={styles.importanceSelect}
-              aria-label="Email importance"
-            >
-              <option value={1}>Normal</option>
-              <option value={2}>High</option>
-              <option value={0}>Low</option>
-            </select>
+            <div className={styles.footerActions}>
+              <button className={styles.sendBtn} onClick={handleSend} disabled={loading} type="button">
+                {loading ? "Enviando..." : "Enviar"}
+              </button>
+              <select
+                value={emailData.importance}
+                onChange={(e) => handleInputChange("importance", Number.parseInt(e.target.value))}
+                className={styles.importanceSelect}
+                aria-label="Importancia del email"
+              >
+                <option value={1}>Normal</option>
+                <option value={2}>Alta</option>
+                <option value={0}>Baja</option>
+              </select>
+            </div>
           </footer>
         </div>
       )}
@@ -241,4 +258,4 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
   )
 }
 
-export default FloatingCompose
+export default ComposeModal

@@ -2,12 +2,14 @@
 
 import type React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import MailList from "./MailList"
-import Button from "../../components/Button"
+import MailList from "../../components/Mail/MailList"
+import Button from "../../components/Mail/Buttons/Button"
+import { useState } from "react"
 
 const MailInbox: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const currentHash = location.hash.replace("#", "") || "inbox"
 
   const navigateToSection = (section: string) => {
@@ -26,7 +28,11 @@ const MailInbox: React.FC = () => {
 
       <h1>{currentHash.charAt(0).toUpperCase() + currentHash.slice(1)}</h1>
 
-      <MailList section={currentHash} />
+      <MailList
+        section={currentHash}
+        selectedMailId={selectedId}
+        onMailSelect={mail => setSelectedId(mail.id ?? null)}
+      />
     </div>
   )
 }

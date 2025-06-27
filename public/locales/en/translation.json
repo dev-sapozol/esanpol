@@ -1,0 +1,86 @@
+{
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email or phone",
+      "password": "Password",
+      "noAccount": {
+        "text": "Don't have an account?",
+        "link": "Create one."
+      },
+      "noAccess": "Can't access your account?",
+      "noPassword": "Forgot your password?",
+      "otherMethod": "Login with another method, Coming soon!"
+    },
+    "register": {
+      "title": "Register",
+      "submit": "Register",
+      "createAccount": "Create",
+      "skip": "Skip",
+      "addCellphone": "Add phone",
+      "cellphoneOptionalInfo": "If you don't have a phone number, you can use an email instead."
+    }
+  },
+  "form": {
+    "fields": {
+      "email": "Email",
+      "name": "Name",
+      "fatherName": "Father name",
+      "motherName": "Mother name",
+      "password": "Password",
+      "phone": "Phone",
+      "gender": "Gender",
+      "birthday": "DD-MM-YYYY",
+      "country": "Country",
+      "submit": "Next",
+      "submit2": "Enter"
+    },
+    "gender": {
+      "female": "Female",
+      "male": "Male",
+      "other": "Other"
+    },
+    "country": {
+      "select": "Select country"
+    }
+  },
+  "errors": {
+    "required": {
+      "email": "Email is required",
+      "password": "Password is required",
+      "name": "Name is required",
+      "fatherName": "Father name is required",
+      "phone": "Phone is required",
+      "birthday": "Birthday is required",
+      "gender": "Gender is required",
+      "country": "Country is required"
+    },
+    "invalid": {
+      "emailNotFound": "Email not found",
+      "passwordIncorrect": "Password incorrect"
+    },
+    "generic": {
+      "checkingEmail": "Error checking email",
+      "emailAlreadyUsed": "Email already used"
+    }
+  },
+  "generic": {
+    "searchPlaceholder": "Search"
+  },
+  "user": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "emilIA": {
+    "help": "How can I help you?",
+    "startChat": "Cooming soon!"
+  },
+  "email": {
+    "noMessages": {
+      "load": "Loading...",
+      "noMsgFolder": "No messages in this folder",
+      "noMsgEmail": "When you receive emails, they'll appear here."
+    }
+  }
+}

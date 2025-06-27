@@ -1,0 +1,17 @@
+query GetBasicEmailList {
+  getBasicEmailList {
+    id
+    from
+    to
+    cc
+    subject
+    preview
+    isRead
+    hasAttachment
+    importance
+    threadId
+    folder
+    deletedAt
+    createdAt
+  }
+}

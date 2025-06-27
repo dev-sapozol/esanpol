@@ -1,0 +1,14 @@
+query GetBasicDataUser {
+  getBasicDataUser {
+    id
+    name
+    fatherName
+    motherName
+    email
+    country
+    cellphone
+    timezone
+    role
+    language
+  }
+}

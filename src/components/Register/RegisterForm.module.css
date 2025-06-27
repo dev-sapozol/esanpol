@@ -1,0 +1,328 @@
+.registerBox {
+  width: 480px;
+  max-width: 45vw;
+  min-height: 420px;
+  /* max-height: 48vh; <-- Podrías quitar esto o ajustarlo para el paso 1 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  transition: width 0.5s ease-in-out, min-height 0.5s ease-in-out, max-height 0.5s ease-in-out;
+}
+
+.horizontalStepContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.registerBoxHorizontal {
+  width: 700px;
+  max-width: 90vw;
+  /* Ajusta según sea necesario */
+  min-height: 280px;
+  /* Menor altura */
+  /* max-height: 60vh; Ajusta si es necesario */
+  flex-direction: row;
+  align-items: center;
+}
+
+.horizontalLeftSection {
+  flex-basis: 40%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-right: 0px;
+  box-sizing: border-box;
+}
+
+.horizontalLeftSection .registerHeader {
+  width: auto;
+  max-width: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.horizontalLeftSection .registerHeader h2 {
+  font-size: 28px;
+  margin-left: 0;
+}
+
+.brandingContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.brandingContent img {
+  width: 55px;
+  height: 55px;
+}
+
+.horizontalRightSection {
+  flex-basis: 60%;
+  /* O el porcentaje que desees */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 30px 0 0;
+  box-sizing: border-box;
+}
+
+.registerHeaderStep1 {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  max-width: 140px;
+  align-items: center;
+  margin: 0px 0px 25px 45px;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(20px, 1vw, 10px);
+  gap: 10px;
+}
+
+.registerHeader img {
+  width: 45px;
+  height: 45px;
+}
+
+.registerHeader h2 {
+  margin-left: 10px;
+  font-size: 24px;
+}
+
+.registerTittle {
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(14px, 2vw, 20px);
+  display: flex;
+  margin: -5px 0px 25px 45px;
+}
+
+.registerForm1Step {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+  row-gap: 16px;
+  padding: 0 45px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.registerForm1Step input,
+.registerForm1Step select {
+  width: 100%;
+  height: 30px;
+  font-size: 14px;
+  padding: 4px 1px;
+  border: none;
+  outline: none;
+  min-width: 0;
+  background: transparent;
+}
+
+.submitBtn {
+  grid-column: 2 / 3;
+  justify-self: end;
+  margin-top: 24px;
+  width: 90px;
+  height: 30px;
+  background-color: #2764AF;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color .3s ease;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(15px, 1vw, 10px);
+  font-weight: 600;
+}
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 0px 45px;
+  box-sizing: border-box;
+}
+
+.registerForm2Step,
+.registerForm3Step
+
+/* Puedes crear una clase .registerForm3Step si necesitas estilos específicos */
+  {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 350px;
+  padding: 0;
+}
+
+.emailWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.emailWrapper input {
+  width: 100%;
+  padding-right: 100px;
+  outline: none;
+  border: none;
+}
+
+.domainSuffix {
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.errorText {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.separatorHorizontalStep {
+  width: 99%;
+  height: 1px;
+  background-color: #000000;
+  margin-top: -5px;
+}
+
+.registerForm3Step input[type="password"] {
+  width: 100%;
+  outline: none;
+  border: none;
+  box-sizing: border-box;
+  height: 30px;
+}
+
+.separator:hover {
+  background-color: #86888a;
+}
+
+.separator1Step {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: #000;
+}
+
+.separator1Step:hover {
+  background: #57595a;
+}
+
+button[type="submit"] {
+  margin: 24px 40px 0 0;
+  width: 90px;
+  height: 30px;
+  background-color: #2764AF;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-end;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(15px, 1vw, 10px);
+  font-weight: 600;
+}
+
+/* Transiciones */
+.slideEnter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.slideEnterActive {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 300ms ease-in-out;
+}
+
+.slideExit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slideExitActive {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 300ms ease-in-out;
+}
+
+.registerForm4Step {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* Que los inputs ocupen el ancho */
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 380px;
+  /* Ancho del formulario en la sección derecha */
+}
+
+.registerForm4Step h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.registerForm4Step p {
+  color: #555;
+  text-align: center;
+}
+
+.registerForm4Step input[type="tel"] {
+  width: 100%;
+  height: 30px;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.step4Buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 30px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.step4Buttons button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 20px;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  min-width: 90px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.skipButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.skipButton:hover {
+  background-color: #5a6268;
+}

@@ -2,8 +2,8 @@
 
 import type React from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import type { MailSection } from "../../features/mail/types"
-import styles from "./Sidebar.module.css"
+import type { MailSection } from "../../../features/mail/types"
+import styles from "./SidebarMenu.module.css"
 
 interface SidebarProps {
   sections: Array<{
@@ -73,19 +73,6 @@ const Sidebar: React.FC<SidebarProps> = ({ sections, isCollapsed, onToggle, curr
           )
         })}
       </nav>
-
-      {/* Footer */}
-      {!isCollapsed && (
-        <div className={styles.sidebarFooter}>
-          <div className={styles.footerInfo}>
-            <span className={styles.footerText}>Storage</span>
-            <div className={styles.storageBar}>
-              <div className={styles.storageProgress} style={{ width: "75%" }} />
-            </div>
-            <span className={styles.storageText}>11.2 GB of 15 GB used</span>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

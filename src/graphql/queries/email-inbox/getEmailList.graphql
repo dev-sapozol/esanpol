@@ -1,0 +1,17 @@
+query GetEmailList($input: EmailInboxFilter!) {
+  getEmailList(input: $input) {
+    id
+    from
+    to
+    cc
+    subject
+    preview
+    isRead
+    hasAttachment
+    importance
+    threadId
+    folder
+    deletedAt
+    createdAt
+  }
+}

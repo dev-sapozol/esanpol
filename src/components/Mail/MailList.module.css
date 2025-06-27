@@ -61,6 +61,90 @@
   line-height: 1.4;
 }
 
+.mailMeta {
+  display: flex;
+  gap: 7px;
+  font-size: 15px;
+}
+
+.nameSender {
+  padding-right: 80px;
+}
+
+.mailPreview {
+  display: flex;
+  gap: 7px;
+}
+
+.subject {
+  font-weight: 600;
+}
+
+.item, .itemSelected {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 0 0 20px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.listHeader {
+  height: 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.listFooter {
+  height: 100%;
+  min-height: 24px;
+}
+
+.sidebarFooter {
+  width: 300px;
+  padding: 46px 0 0 40px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.footerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footerText {
+  font-size: 12px;
+  color: #5f6368;
+  font-weight: 500;
+}
+
+.storageBar {
+  height: 4px;
+  background-color: #e8eaed;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.storageProgress {
+  height: 100%;
+  background: linear-gradient(90deg, #34a853, #fbbc04, #ea4335);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.storageText {
+  font-size: 11px;
+  color: #5f6368;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .emptyState {

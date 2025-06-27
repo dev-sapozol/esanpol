@@ -2,18 +2,24 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import type { ComposeEmailData } from "../features/mail/types"
-import styles from "../components/ComposeModal.module.css"
+import type { ComposeEmailData } from "../../../features/mail/types"
+import styles from "./FloatingCompose.module.css"
 
-interface ComposeModalProps {
-  isOpen: boolean
+interface FloatingComposeProps {
+  isExpanded: boolean
   onToggle: () => void
   onSend: (emailData: ComposeEmailData) => void
   onClose: () => void
   loading?: boolean
 }
 
-const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, onClose, loading = false }) => {
+const FloatingCompose: React.FC<FloatingComposeProps> = ({
+  isExpanded,
+  onToggle,
+  onSend,
+  onClose,
+  loading = false,
+}) => {
   const [emailData, setEmailData] = useState<ComposeEmailData>({
     to: "",
     cc: "",
@@ -27,19 +33,10 @@ const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, o
 
   const [showCc, setShowCc] = useState(false)
   const [showBcc, setShowBcc] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
+  const triggerRef = useRef<HTMLButtonElement>(null)
   const formRef = useRef<HTMLDivElement>(null)
 
-  // Handle modal state
-  useEffect(() => {
-    if (isOpen && !isExpanded) {
-      setIsExpanded(true)
-    } else if (!isOpen && isExpanded) {
-      setIsExpanded(false)
-    }
-  }, [isOpen, isExpanded])
-
-  // Focus management
+  // Focus management for accessibility
   useEffect(() => {
     if (isExpanded && formRef.current) {
       const firstInput = formRef.current.querySelector('input[type="email"]') as HTMLInputElement
@@ -81,34 +78,37 @@ const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, o
 
   const handleClose = () => {
     handleReset()
-    setIsExpanded(false)
     onClose()
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape" && isExpanded) {
-      handleClose()
+    if (e.key === "Escape") {
+      if (isExpanded) {
+        handleClose()
+      }
     }
   }
 
   return (
-    <div className={`${styles.composeModal} ${isExpanded ? styles.expanded : ""}`} onKeyDown={handleKeyDown}>
+    <div className={`${styles.floatingCompose} ${isExpanded ? styles.expanded : ""}`} onKeyDown={handleKeyDown}>
       {!isExpanded ? (
-        <button className={styles.composeTrigger} onClick={onToggle} aria-label="Compose new email" type="button">
-          <div className={styles.triggerContent}>
-            <span className={styles.triggerIcon}>✉</span>
-            <span className={styles.triggerText}>Redactar correo</span>
-          </div>
+        <button
+          ref={triggerRef}
+          className={styles.composeTrigger}
+          onClick={onToggle}
+          aria-label="Compose new email"
+          type="button"
+        >
+          <span className={styles.composeText}>Compose</span>
         </button>
       ) : (
         <div ref={formRef} className={styles.composeForm} role="dialog" aria-label="Compose email" aria-modal="true">
-          {/* Header */}
           <header className={styles.composeHeader}>
-            <h2>Nuevo mensaje</h2>
+            <h2>New Message</h2>
             <div className={styles.headerActions}>
               <button
                 className={styles.minimizeBtn}
-                onClick={() => setIsExpanded(false)}
+                onClick={onToggle}
                 aria-label="Minimize compose window"
                 type="button"
               >
@@ -120,20 +120,16 @@ const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, o
             </div>
           </header>
 
-          {/* Form Fields */}
           <div className={styles.composeFields}>
             {/* To Field */}
             <div className={styles.fieldRow}>
-              <label htmlFor="compose-to" className={styles.fieldLabel}>
-                Para
-              </label>
+              <label htmlFor="compose-to">To</label>
               <input
                 id="compose-to"
                 type="email"
                 value={emailData.to}
                 onChange={(e) => handleInputChange("to", e.target.value)}
-                placeholder="Destinatarios"
-                className={styles.fieldInput}
+                placeholder="Recipients"
                 required
                 aria-required="true"
               />
@@ -145,7 +141,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, o
                 )}
                 {!showBcc && (
                   <button onClick={() => setShowBcc(true)} className={styles.fieldToggle} type="button">
-                    Cco
+                    Bcc
                   </button>
                 )}
               </div>
@@ -154,16 +150,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, o
             {/* CC Field */}
             {showCc && (
               <div className={styles.fieldRow}>
-                <label htmlFor="compose-cc" className={styles.fieldLabel}>
-                  Cc
-                </label>
+                <label htmlFor="compose-cc">Cc</label>
                 <input
                   id="compose-cc"
                   type="email"
                   value={emailData.cc}
                   onChange={(e) => handleInputChange("cc", e.target.value)}
-                  placeholder="Copia"
-                  className={styles.fieldInput}
+                  placeholder="Carbon copy"
                 />
                 <button
                   onClick={() => setShowCc(false)}
@@ -179,16 +172,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, o
             {/* BCC Field */}
             {showBcc && (
               <div className={styles.fieldRow}>
-                <label htmlFor="compose-bcc" className={styles.fieldLabel}>
-                  Cco
-                </label>
+                <label htmlFor="compose-bcc">Bcc</label>
                 <input
                   id="compose-bcc"
                   type="email"
                   value={emailData.bcc}
                   onChange={(e) => handleInputChange("bcc", e.target.value)}
-                  placeholder="Copia oculta"
-                  className={styles.fieldInput}
+                  placeholder="Blind carbon copy"
                 />
                 <button
                   onClick={() => setShowBcc(false)}
@@ -203,55 +193,47 @@ const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, o
 
             {/* Subject Field */}
             <div className={styles.fieldRow}>
-              <label htmlFor="compose-subject" className={styles.fieldLabel}>
-                Asunto
-              </label>
+              <label htmlFor="compose-subject">Subject</label>
               <input
                 id="compose-subject"
                 type="text"
                 value={emailData.subject}
                 onChange={(e) => handleInputChange("subject", e.target.value)}
-                placeholder="Asunto del mensaje"
-                className={styles.fieldInput}
+                placeholder="Subject"
                 required
                 aria-required="true"
               />
             </div>
           </div>
 
-          {/* Message Body */}
           <div className={styles.composeBody}>
             <label htmlFor="compose-message" className={styles.visuallyHidden}>
-              Contenido del mensaje
+              Message content
             </label>
             <textarea
               id="compose-message"
               value={emailData.textBody}
               onChange={(e) => handleInputChange("textBody", e.target.value)}
-              placeholder="Escribe tu mensaje aquí..."
-              className={styles.messageTextarea}
+              placeholder="Compose your message..."
               required
               aria-required="true"
             />
           </div>
 
-          {/* Footer */}
           <footer className={styles.composeFooter}>
-            <div className={styles.footerActions}>
-              <button className={styles.sendBtn} onClick={handleSend} disabled={loading} type="button">
-                {loading ? "Enviando..." : "Enviar"}
-              </button>
-              <select
-                value={emailData.importance}
-                onChange={(e) => handleInputChange("importance", Number.parseInt(e.target.value))}
-                className={styles.importanceSelect}
-                aria-label="Importancia del email"
-              >
-                <option value={1}>Normal</option>
-                <option value={2}>Alta</option>
-                <option value={0}>Baja</option>
-              </select>
-            </div>
+            <button className={styles.sendBtn} onClick={handleSend} disabled={loading} type="button">
+              {loading ? "Sending..." : "Send"}
+            </button>
+            <select
+              value={emailData.importance}
+              onChange={(e) => handleInputChange("importance", Number.parseInt(e.target.value))}
+              className={styles.importanceSelect}
+              aria-label="Email importance"
+            >
+              <option value={1}>Normal</option>
+              <option value={2}>High</option>
+              <option value={0}>Low</option>
+            </select>
           </footer>
         </div>
       )}
@@ -259,4 +241,4 @@ const ComposeModal: React.FC<ComposeModalProps> = ({ isOpen, onToggle, onSend, o
   )
 }
 
-export default ComposeModal
+export default FloatingCompose

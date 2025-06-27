@@ -1,0 +1,25 @@
+{
+  "login": {
+    "title": "Iniciar sesión",
+    "email": "Correo electrónico o teléfono",
+    "password": "Contraseña",
+    "submit": "Siguiente",
+    "submit2": "Entrar",
+    "noAccount": {
+      "text": "¿No tienes una cuenta?",
+      "link": "Crea una."
+    },
+    "noAccess": "No puede acceder a su cuenta.",
+    "error": "Correo o contraseña incorrectos"
+  },
+  "register": {
+    "title": "Registrarse",
+    "email": "Correo",
+    "name": "Nombre",
+    "fatherName": "Apellido paterno",
+    "motherName": "Apellido materno",
+    "password": "Contraseña",
+    "number": "Teléfono",
+    "submit": "Registrarse"
+  }
+}
