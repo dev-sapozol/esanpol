@@ -52,9 +52,8 @@ const NavMail: React.FC = () => {
         <p>{(user?.name ?? "") + " " + (user?.fatherName ?? "")}</p>
 
         {/* Contenedor del Avatar y Dropdown */}
-        <div className={styles.avatarContainer}> {/* <--- Nuevo contenedor para el avatar y el dropdown */}
+        <div className={styles.avatarContainer}>
           <div className={styles.avatar} onClick={() => setOpen(!open)} role="button" tabIndex={0} aria-haspopup="true" aria-expanded={open}>
-            {/* Si tienes una URL para el avatar del usuario, úsala aquí */}
             {/* <img src={user?.avatarUrl || "../../assets/default-avatar.png"} alt={t("nav.userAvatarAlt")} /> */}
             {!user?.avatarUrl && <span className={styles.avatarPlaceholder}>{(user?.name?.[0] ?? "U").toUpperCase()}</span>}
           </div>

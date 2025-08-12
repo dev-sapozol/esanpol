@@ -1,0 +1,271 @@
+/* Fonts */
+.bebasFont {
+  font-family: "Bebas Neue", sans-serif;
+}
+
+.dev {
+  letter-spacing: 2px;
+  overflow: hidden;
+  position: relative;
+  line-height: 1.2;
+  display: inline-block;
+  transform: scale(0.7, 1.8);
+  transform-origin: center;
+}
+
+.lineWithMaskTop,
+.lineWithMaskBottom {
+  font-size: 100px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-image: linear-gradient(to top, transparent 34%, black 0%, black 0%);
+}
+
+.lineWithMaskBottom {
+  padding-left: 60px;
+}
+
+.myMeContent {
+  width: 85%;
+  height: auto;
+}
+
+.myMeContentHeader {
+  margin: 50px 0 50px 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 0 0 0;
+}
+
+.myMeHeader {
+  height: auto;
+  width: 800px;
+  text-align: center;
+  color: azure
+}
+
+.myMeHeader h1 {
+  padding-bottom: 25px;
+}
+
+.txtPresentation {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 50px 0 50px 0;
+}
+
+.avatarContainer {
+  position: relative;
+  align-items: center;
+  text-align: center;
+}
+
+.avatar {
+  margin: 10px 0 10px 0;
+  border-radius: 50%;
+  overflow: hidden;
+  filter: opacity(80%);
+}
+
+.avatar img {
+  padding-left: 80px;
+  width: 65%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.iconsContainer {
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px
+}
+
+.secondLevelWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  gap: 50px;
+}
+
+.languages,
+.frameworks,
+.cloudServices {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+}
+
+/* Languages */
+
+.languagesBoard {
+  position: relative;
+  width: 400px;
+  height: 200px;
+  background: radial-gradient(#1a1a2e, #0f0f1c);
+  border: 2px solid #333;
+  border-radius: 12px;
+  margin-top: 15px;
+  overflow: hidden;
+}
+
+.icon {
+  position: absolute;
+  /* Esto es CLAVE */
+  width: 90px;
+  height: 90px;
+  background-color: #202033;
+  border-radius: 10px;
+  padding: 8px;
+  cursor: grab;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s ease;
+}
+
+.icon:active {
+  cursor: grabbing;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+}
+
+.iconImg {
+  width: 40px;
+  height: 40px;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  /* para que no interfiera con el drag */
+}
+
+.iconLabel {
+  margin-top: 6px;
+  color: #e0e0e0;
+  font-size: 12px;
+  text-align: center;
+}
+
+
+/* Frameworks */
+
+.frameworks {
+  display: flex;
+}
+
+.frameworksWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  width: 100px;
+  height: 100px;
+  perspective: 800px;
+  margin: 10px;
+}
+
+.cardInner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card:hover .cardInner {
+  transform: rotateY(180deg);
+}
+
+.cardFront,
+.cardBack {
+  position: absolute;
+  backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.cardFront {
+  background: #1c1c1e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardBack {
+  background: #333;
+  color: white;
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CloudService */
+
+.cloudWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}
+
+.glowIcon {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.iconContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+  transition: transform 0.3s ease;
+}
+
+.iconContainer:hover {
+  transform: scale(1.1);
+}
+
+.iconContainer img {
+  width: 60px;
+  height: 60px;
+  transition: filter 0.3s ease, box-shadow 0.3s ease;
+  filter: drop-shadow(0 0 5px #0ff);
+}
+
+.iconContainer:hover img {
+  filter: drop-shadow(0 0 10px #0ff);
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: #111;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 12px;
+  position: absolute;
+  bottom: -35px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.iconContainer:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
