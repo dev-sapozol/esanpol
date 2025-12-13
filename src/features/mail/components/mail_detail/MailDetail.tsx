@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import type { Mail } from "../../features/mail/types"
+import type { Mail } from "../../types"
 import styles from "./MailDetail.module.css"
 
 interface MailDetailProps {
@@ -10,7 +10,8 @@ interface MailDetailProps {
 }
 
 const MailDetail: React.FC<MailDetailProps> = ({ mail, onBack }) => {
-  const formattedDate = new Date(mail.date).toLocaleString("en-US", {
+  const rawDate = mail.inserted_at ?? new Date().toISOString()
+  const formattedDate = new Date(rawDate.replace(" ", "T")).toLocaleString("en-US", {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -38,10 +39,10 @@ const MailDetail: React.FC<MailDetailProps> = ({ mail, onBack }) => {
 
             <div className={styles.mailMeta}>
               <div className={styles.senderInfo}>
-                <div className={styles.senderAvatar}>{mail.sender.charAt(0).toUpperCase()}</div>
+                <div className={styles.senderAvatar}>{mail.senderAvatar.charAt(0).toUpperCase()}</div>
                 <div className={styles.senderDetails}>
-                  <div className={styles.senderName}>{mail.sender}</div>
-                  <div className={styles.senderEmail}>&lt;{mail.sender}&gt;</div>
+                  <div className={styles.senderName}>{mail.senderName}</div>
+                  <div className={styles.senderEmail}>&lt;{mail.senderEmail}&gt;</div>
                 </div>
               </div>
               <div className={styles.dateInfo}>

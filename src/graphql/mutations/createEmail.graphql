@@ -1,19 +1,21 @@
-mutation CreateEmail($input: CreateEmailInput!) {
+mutation CreateEmail($input: CreateEmail!) {
   createEmail(input: $input) {
     id
-    userId
-    from
+    user_id
     to
     cc
-    bcc
+    subject
     preview
-    inboxType
-    isRead
-    hasAttachment
+    inbox_type
+    is_read
+    has_attachment
     importance
-    textBody
-    htmlBody
-    folder
-    createdAt
+    text_body
+    html_body
+    inserted_at
+    updated_at
+    deleted_at
+    folder_type
+    folder_id
   }
 }

@@ -1,0 +1,81 @@
+.navbar {
+  width: 100%;
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Left (logo) */
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 32px;
+  object-fit: contain;
+}
+
+/* Center (search bar) */
+.center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.searchContainer {
+  position: relative;
+  width: 45%;
+  min-width: 250px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 40px 10px 12px;
+  border-radius: 20px;
+  border: 1px solid #cbd5e0;
+  background: #f3f4f6;
+  outline: none;
+  font-size: 14px;
+}
+
+.searchInput:focus {
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+/* Right (username + avatar) */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}

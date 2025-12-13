@@ -1,0 +1,454 @@
+/* Variables generales */
+.modal {
+  --primary: #0b57d0;
+  --bg-hover: #f0f4f8;
+  --border-color: #e0e0e0;
+  --text-color: #1f1f1f;
+  --text-secondary: #444746;
+  --danger: #b3261e;
+}
+
+/* --- Layout Principal (CENTRADO) --- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  /* Fondo oscuro suave */
+  display: flex;
+  align-items: center;
+  /* Centrado Vertical */
+  justify-content: center;
+  /* Centrado Horizontal */
+  z-index: 5000;
+  padding: 20px;
+}
+
+.modal {
+  width: 680px;
+  max-width: 95vw;
+  height: 650px;
+  max-height: 90vh;
+  background: white;
+  border-radius: 8px;
+  /* Bordes redondeados */
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeInScale 0.2s ease-out;
+}
+
+.fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  border-radius: 0;
+  max-width: none;
+  max-height: none;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Header --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: #f2f6fc;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.headerControls button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+.headerControls button:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #000;
+}
+
+.closeBtn:hover {
+  background: #e0e0e0 !important;
+  color: var(--danger) !important;
+}
+
+/* --- Destinatarios --- */
+.recipientsArea {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px 0;
+}
+
+.fieldRow {
+  display: flex;
+  align-items: flex-start;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f1f1;
+  transition: border-color 0.2s;
+}
+
+.fieldRow:focus-within {
+  border-bottom-color: #ccc;
+}
+
+.fieldError {
+  background-color: #fff0f0;
+}
+
+.label {
+  color: var(--text-secondary);
+  font-size: 14px;
+  width: 50px;
+  padding-top: 6px;
+  cursor: pointer;
+}
+
+.fieldBody {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  flex: 1;
+  min-width: 100px;
+  padding: 5px 0;
+  background: transparent;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 16px;
+  padding: 2px 8px 2px 10px;
+  font-size: 13px;
+  color: var(--text-color);
+}
+
+.chip button {
+  background: none;
+  border: none;
+  margin-left: 4px;
+  cursor: pointer;
+  color: #5f6368;
+  font-size: 16px;
+  padding: 0 2px;
+}
+
+.chip button:hover {
+  color: var(--danger);
+}
+
+.ccBccLinks span {
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+.ccBccLinks span:hover {
+  text-decoration: underline;
+  color: #000;
+}
+
+.closeFieldBtn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #777;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+/* --- Asunto --- */
+.subjectRow {
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.subjectInput {
+  width: 100%;
+  border: none;
+  padding: 12px 0;
+  font-size: 16px;
+  outline: none;
+  background: transparent;
+}
+
+/* --- Toolbar --- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--border-color);
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.toolGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.separator {
+  width: 1px;
+  height: 20px;
+  background: #e0e0e0;
+  margin: 0 4px;
+}
+
+.toolbar button {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: 15px;
+  color: var(--text-secondary);
+  min-width: 28px;
+}
+
+.toolbar button:hover {
+  background: var(--bg-hover);
+  color: #000;
+}
+
+.toolbar button.active {
+  background: #e8f0fe;
+  color: var(--primary);
+}
+
+.toolbar button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.select {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  outline: none;
+}
+
+.colorWrapper {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.colorIcon {
+  font-weight: bold;
+  font-family: serif;
+  border-bottom: 3px solid currentColor;
+  line-height: 0.8;
+}
+
+.colorInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* --- Editor (CSS DE LISTAS MEJORADO) --- */
+.editorContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  cursor: text;
+  background: #fff;
+}
+
+.tiptapEditor :global(.ProseMirror) {
+  outline: none;
+  min-height: 150px;
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #222;
+}
+
+/* Placeholders */
+.tiptapEditor :global(.ProseMirror p.is-editor-empty:first-child::before) {
+  color: #aaa;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Listas: Sangrías y estilos anidados */
+.tiptapEditor :global(.ProseMirror ul),
+.tiptapEditor :global(.ProseMirror ol) {
+  padding-left: 24px;
+  /* Sangría visible */
+  margin: 4px 0;
+}
+
+.tiptapEditor :global(.ProseMirror ul li) {
+  list-style-type: disc;
+}
+
+.tiptapEditor :global(.ProseMirror ul ul li) {
+  list-style-type: circle;
+}
+
+.tiptapEditor :global(.ProseMirror ul ul ul li) {
+  list-style-type: square;
+}
+
+.tiptapEditor :global(.ProseMirror ol li) {
+  list-style-type: decimal;
+}
+
+.tiptapEditor :global(.ProseMirror ol ol li) {
+  list-style-type: lower-alpha;
+}
+
+/* --- Footer & Attachments --- */
+.attachmentsList {
+  padding: 10px 16px;
+  background: #f8f9fa;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.attachmentChip {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dadce0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  gap: 6px;
+}
+
+.attachmentChip button {
+  border: none;
+  background: none;
+  color: #666;
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+}
+
+.footerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sendBtn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  padding: 0 24px;
+  height: 36px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sendBtn:hover {
+  background: #0b50c0;
+}
+
+.sendBtn:disabled {
+  background: #ccc;
+  cursor: default;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #444;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+}
+
+.iconBtn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Estilos para modo Inline */
+.inlineWrapper {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  animation: fadeIn 0.3s ease;
+}
+
+.inlineContainer {
+  background: #fff;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.inlineEditorHeight {
+  min-height: 200px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

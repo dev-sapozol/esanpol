@@ -3,7 +3,7 @@
 import type React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import MailList from "./MailList"
-import Button from "../../components/Button"
+import Button from "../../components/Buttons/Button"
 
 const MailInbox: React.FC = () => {
   const location = useLocation()

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import type { Mail } from "../features/mail/types"
+import type { Mail } from "../../types"
 import styles from "./MailItem.module.css"
 
 interface MailItemProps {
@@ -12,13 +12,25 @@ interface MailItemProps {
 }
 
 const MailItem: React.FC<MailItemProps> = ({ mail, isSelected, onClick, isLast = false }) => {
-  const formattedDate = new Date(mail.date).toLocaleDateString("en-US", {
+
+  // Tomamos mail.date o mail.inserted_at
+  const rawDate = mail.date ?? mail.inserted_at ?? null
+
+  // Creamos el objeto Date de forma segura
+  const dateObj = rawDate
+    ? new Date(rawDate.replace(" ", "T"))
+    : new Date()
+
+  const formattedDate = dateObj.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
-    year: new Date().getFullYear() !== new Date(mail.date).getFullYear() ? "numeric" : undefined,
+    year:
+      new Date().getFullYear() !== dateObj.getFullYear()
+        ? "numeric"
+        : undefined,
   })
 
-  const formattedTime = new Date(mail.date).toLocaleTimeString("en-US", {
+  const formattedTime = dateObj.toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
@@ -45,15 +57,18 @@ const MailItem: React.FC<MailItemProps> = ({ mail, isSelected, onClick, isLast =
           onClick()
         }
       }}
-      aria-label={`Email from ${mail.sender}, subject: ${mail.subject}, ${mail.isRead ? "read" : "unread"}`}
+      aria-label={`Email from ${mail.senderName}, subject: ${mail.subject}, ${mail.isRead ? "read" : "unread"}`}
     >
       <div className={styles.mailItemContent}>
-        {/* Main row with sender, subject, and date */}
+        {/* Main row */}
         <div className={styles.mainRow}>
           <div className={styles.senderSection}>
-            <span className={styles.sender}>{mail.sender}</span>
+            <span className={styles.sender}>
+              {mail.senderName ?? mail.senderEmail} {/* si no hay nombre, usar email */}
+            </span>
             {!mail.isRead && <span className={styles.unreadIndicator} aria-label="Unread" />}
           </div>
+
 
           <div className={styles.subjectSection}>
             <span className={styles.subject}>{mail.subject}</span>

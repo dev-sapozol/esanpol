@@ -43,7 +43,7 @@
   font-weight: 500;
 }
 
-.date {
+.date, .time {
   font-size: 12px;
   color: #5f6368;
 }
@@ -62,4 +62,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.dateSection{
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
