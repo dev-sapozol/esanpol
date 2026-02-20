@@ -7,8 +7,6 @@ const get_email = gql`
       id
       subject
       preview
-      text_body
-      html_body
       inserted_at
       to
       cc
@@ -19,6 +17,8 @@ const get_email = gql`
       folder_id
       sender_name
       sender_email
+      body_url
+      raw_url
     }
   }
 `;
@@ -35,18 +35,18 @@ export function useGetEmail(id: number | string) {
       id: Number(data.get_email.id),
       subject: data.get_email.subject,
       preview: data.get_email.preview,
-      body: data.get_email.text_body,
-      htmlBody: data.get_email.html_body,
-      senderName:
-        data.get_email.sender_name ||
-        data.get_email.sender_email,
+      bodyUrl: data.get_email.body_url,
+      rawUrl: data.get_email.raw_url,
+      senderName: data.get_email.sender_name,
       senderEmail: data.get_email.sender_email,
       senderAvatar: "",
       inserted_at: data.get_email.inserted_at,
       isRead: data.get_email.is_read,
       section: data.get_email.folder_type.toLowerCase(),
     }
-    : undefined;
+    : undefined
+
+
 
   return { mail, loading, error, refetch };
 }

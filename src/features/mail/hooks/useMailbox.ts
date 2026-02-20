@@ -9,8 +9,8 @@ import { useQuery, gql } from "@apollo/client";
 import type { Mail, MailSection } from "../types";
 
 const preloadMailbox = gql`
-  query PreloadMailbox($user_id: IntegerId!, $limit: Int) {
-    preload_mailbox(user_id: $user_id, limit: $limit) {
+  query PreloadMailbox($limit: Int) {
+    preload_mailbox(limit: $limit) {
       system_folders {
         id
         name
@@ -39,26 +39,24 @@ const preloadMailbox = gql`
           folder_id
           folder_type
           inserted_at
-          senderEmail
-          senderName
+          sender_name
+          sender_email
         }
       }
     }
   }
 `;
 
-export function useMailbox(userId: string | number, limit = 50) {
+export function useMailbox(limit = 50) {
   const { data, loading, error, refetch } = useQuery(preloadMailbox, {
-    variables: { user_id: Number(userId), limit },
+    variables: { limit },
     fetchPolicy: "network-only",
-    skip: !userId,
   });
 
   const systemFolders = data?.preload_mailbox?.system_folders ?? [];
   const userFolders = data?.preload_mailbox?.user_folders ?? [];
   const emailsByFolderRaw = data?.preload_mailbox?.emails_by_folder ?? [];
 
-  // Convertimos los emails a tu tipo Mail
   const emailsByFolder = useMemo(() => {
     return emailsByFolderRaw.map((folder: any) => ({
       folder_id: folder.folder_id,
@@ -66,14 +64,13 @@ export function useMailbox(userId: string | number, limit = 50) {
       emails: folder.emails.map((email: any): Mail => ({
         id: Number(email.id),
         subject: email.subject,
-        senderName: email.senderName ?? undefined,
-        senderEmail: email.senderEmail,
+        senderName: email.sender_name ?? undefined,
+        senderEmail: email.sender_email,
         senderAvatar: "",
         preview: email.preview,
-        body: email.textBody,
         isRead: email.is_read,
         inserted_at: email.inserted_at,
-        section: (folder.folder_type.toLowerCase() as MailSection),
+        section: folder.folder_type.toLowerCase() as MailSection,
       })),
     }));
   }, [emailsByFolderRaw]);
@@ -89,7 +86,6 @@ export function useMailbox(userId: string | number, limit = 50) {
     },
     [emailsByFolder]
   );
-
 
   return {
     systemFolders,

@@ -5,8 +5,8 @@ export interface Mail {
   senderEmail: string
   senderAvatar: string
   preview: string
-  body?: string
-  htmlBody?: string
+  bodyUrl?: string
+  rawUrl?: string
   isRead: boolean
   date?: string
   inserted_at?: string
@@ -22,14 +22,12 @@ export interface MailSectionConfig {
 }
 
 export interface ComposeEmailData {
-  to: string[]
-  cc?: string[]
-  bcc?: string[]
+  to: string
+  cc?: string
+  bcc?: string
   subject?: string
-  textBody?: string
   htmlBody?: string
   importance?: "normal" | "high"
-  attachments?: File[]
   hasAttachment?: boolean
 }
 

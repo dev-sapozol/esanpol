@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import { useGetEmail } from "../../hooks/useGetEmail"
 import { useReplyEmail } from "../../hooks/useReplyEmail"
-import ComposeModal from "../ComposeModal/ComposeModal" 
+import ComposeModal from "../ComposeModal/ComposeModal"
 import styles from "./MailDetailModal.module.css"
 import { ComposeEmailData } from "../../types"
 
@@ -29,13 +29,13 @@ const formatDateDetail = (dateString: string) => {
 
 const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEmailSent }) => {
   const { mail, loading, error } = useGetEmail(mailId)
-  
+
   const { replyEmail, loading: mutationLoading } = useReplyEmail()
 
   const [isReplying, setIsReplying] = useState(false)
   const [replyData, setReplyData] = useState<Partial<ComposeEmailData> | null>(null)
   const [sendingReply, setSendingReply] = useState(false)
-  
+
   const replyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -46,33 +46,31 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
     }
   }, [isReplying])
 
-  if (loading) return <div className={styles.loading}>Cargando...</div>
-  if (error) return <div className={styles.error}>Error</div>
   if (!mail) return null
 
-  const safeDate = mail.inserted_at || mail.date || ""
+  const safeDate = mail.inserted_at ?? ""
 
   const handleReply = () => {
     const originalDate = formatDateDetail(safeDate)
     const sender = mail.senderName || mail.senderEmail
-    const contentBody = (mail as any).htmlBody || mail.body || ""
 
     const quoteHtml = `
-      <br><br>
-      <div class="gmail_quote">
-        El ${originalDate}, ${sender} escribió:
-        <blockquote class="gmail_quote" style="margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-          ${contentBody}
-        </blockquote>
-      </div>
-    `
+  <br><br>
+  <div class="gmail_quote">
+    El ${originalDate}, ${sender} escribió:
+    <blockquote style="margin-left:1ex;border-left:2px solid #ccc;padding-left:1ex">
+      ${mail.preview}
+    </blockquote>
+  </div>
+`
 
-    const subjectPrefix = mail.subject.toLowerCase().startsWith("re:") ? "" : "Re: "
-    
+    const subject = mail.subject ?? ""
+    const subjectPrefix = subject.toLowerCase().startsWith("re:") ? "" : "Re: "
+
     setReplyData({
-      to: [mail.senderEmail], 
+      to: mail.senderEmail,
       subject: `${subjectPrefix}${mail.subject}`,
-      htmlBody: quoteHtml
+      htmlBody: quoteHtml,
     })
     setIsReplying(true)
   }
@@ -86,7 +84,7 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
     setSendingReply(true)
     try {
       console.log("Enviando respuesta:", data)
-      
+
       await replyEmail({
         parentId: mail.id,
         subject: data.subject,
@@ -104,28 +102,25 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
     }
   }
 
-  const displayHtml = (mail as any).htmlBody || null
-  const displayBody = mail.body || ""
-
   // Clase dinámica: Si responde, el modal crece
-  const modalClass = isReplying 
-    ? `${styles.modal} ${styles.modalExpanded}` 
+  const modalClass = isReplying
+    ? `${styles.modal} ${styles.modalExpanded}`
     : styles.modal
 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={modalClass} onClick={(e) => e.stopPropagation()}>
-        
+
         {/* Top Bar */}
         <div className={styles.topBar}>
-           <div className={styles.topBarLeft}>
-              {/* Aquí podrías poner íconos de archivar/borrar el correo actual */}
-           </div>
-           <button className={styles.iconBtn} onClick={onClose} title="Cerrar">✕</button>
+          <div className={styles.topBarLeft}>
+            {/* Aquí podrías poner íconos de archivar/borrar el correo actual */}
+          </div>
+          <button className={styles.iconBtn} onClick={onClose} title="Cerrar">✕</button>
         </div>
 
         <div className={styles.scrollContent}>
-          
+
           {/* Asunto con separador visual */}
           <div className={styles.subjectRow}>
             <h1 className={styles.subject}>{mail.subject}</h1>
@@ -139,7 +134,7 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
             <div className={styles.avatar}>
               {getInitials(mail.senderName || mail.senderEmail)}
             </div>
-            
+
             <div className={styles.metaInfo}>
               <div className={styles.senderLine}>
                 <span className={styles.senderName}>{mail.senderName || "Desconocido"}</span>
@@ -155,10 +150,39 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
 
           {/* Contenido */}
           <div className={styles.bodyContainer}>
-            {displayHtml ? (
-               <div dangerouslySetInnerHTML={{ __html: displayHtml }} />
+            {mail.bodyUrl ? (
+              <iframe
+                src={mail.bodyUrl}
+                className={styles.emailIframe}
+                sandbox="allow-same-origin allow-popups"
+                onLoad={(e) => {
+                  const iframe = e.currentTarget
+                  const doc = iframe.contentDocument
+                  if (!doc) return
+
+                  const style = doc.createElement("style")
+                  style.innerHTML = `
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .email-body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #202124;
+      }
+
+      .email-body p {
+        margin: 0 0 1em 0;
+      }
+    `
+                  doc.head.appendChild(style)
+                }}
+              />
             ) : (
-               <div className={styles.plainText}>{displayBody}</div>
+              <div className={styles.plainText}> No content </div>
             )}
           </div>
 
@@ -175,36 +199,36 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
               </div>
             ) : (
               <div ref={replyRef} className={styles.inlineReplyContainer}>
-                 <div className={styles.replyHeaderInfo}>
-                    <div className={styles.replyHeaderLeft}>
-                        <div className={styles.avatarSmall}>YO</div>
-                        <div className={styles.replyArrow}>↩</div>
-                        <span className={styles.replyingTo}>
-                            Respondiendo a <b>{mail.senderName || mail.senderEmail}</b>
-                        </span>
-                    </div>
-                    {/* Botón explícito para CANCELAR la respuesta */}
-                    <button 
-                        className={styles.cancelReplyBtn} 
-                        onClick={handleCancelReply}
-                        title="Descartar respuesta"
-                    >
-                        ✕
-                    </button>
-                 </div>
+                <div className={styles.replyHeaderInfo}>
+                  <div className={styles.replyHeaderLeft}>
+                    <div className={styles.avatarSmall}>YO</div>
+                    <div className={styles.replyArrow}>↩</div>
+                    <span className={styles.replyingTo}>
+                      Respondiendo a <b>{mail.senderName || mail.senderEmail}</b>
+                    </span>
+                  </div>
+                  {/* Botón explícito para CANCELAR la respuesta */}
+                  <button
+                    className={styles.cancelReplyBtn}
+                    onClick={handleCancelReply}
+                    title="Descartar respuesta"
+                  >
+                    ✕
+                  </button>
+                </div>
 
-                 <ComposeModal 
-                    isOpen={true}
-                    onClose={handleCancelReply}
-                    onSend={onSendReply}
-                    loading={sendingReply}
-                    initialData={replyData as any}
-                    isInline={true}
-                 />
+                <ComposeModal
+                  isOpen={true}
+                  onClose={handleCancelReply}
+                  onSend={onSendReply}
+                  loading={sendingReply}
+                  initialData={replyData as any}
+                  isInline={true}
+                />
               </div>
             )}
           </div>
-          
+
           <div style={{ height: 20 }}></div>
         </div>
       </div>

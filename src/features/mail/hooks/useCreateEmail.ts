@@ -7,23 +7,18 @@ const IMPORTANCE_MAP: Record<string, number> = {
 }
 
 const sendEmail = gql`
-  mutation CreateEmail($input: CreateEmail!) {
-    createEmail(input: $input) {
+   mutation SendEmail($input: SendEmail!) {
+    sendEmail(input: $input) {
       id
-      user_id
       to
       cc
       subject
       preview
-      inbox_type
       is_read
       has_attachment
       importance
-      text_body
-      html_body
       folder_id
       inserted_at
-      updated_at
       sender_name
       sender_email
     }
@@ -38,8 +33,7 @@ function toSnakeCaseInput(input: any) {
     preview: input.preview,
     inbox_type: input.inboxType,
     importance: IMPORTANCE_MAP[input.importance] ?? 1,
-    text_body: input.textBody,
-    html_body: input.htmlBody,
+    html_body: wrapEmailBody(input.htmlBody),
   };
 
   if (input.cc) snake.cc = input.cc;
@@ -51,24 +45,29 @@ function toSnakeCaseInput(input: any) {
 }
 
 export const useCreateEmail = () => {
-  const [createEmailMutation, { loading, error, data }] =
+  const [sendEmailMutation, { loading, error, data }] =
     useMutation(sendEmail);
 
   const createEmail = async (input: any) => {
     const snake = toSnakeCaseInput(input);
-    console.log("Sending snake_case input:", snake);
 
-    try {
-      const result = await createEmailMutation({
-        variables: { input: snake },
-      });
+    console.log("Sending input:", snake);
 
-      return result.data?.createEmail;
-    } catch (err) {
-      console.error("Error creating email:", err);
-      throw err;
-    }
+    const result = await sendEmailMutation({
+      variables: { input: snake },
+    });
+
+    return result.data?.sendEmail;
   };
 
   return { createEmail, loading, error, data };
 };
+
+function wrapEmailBody(html: string) {
+  return `
+<div class="email-body">
+${html}
+</div>
+`.trim()
+}
+

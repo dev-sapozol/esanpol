@@ -44,7 +44,7 @@ const MailContainer: React.FC = () => {
     getEmailsFor,
     loading: mailboxLoading,
     refetch: refetchMailbox,
-  } = useMailbox(1, 50)
+  } = useMailbox(50)
 
   const { createEmail, loading: createEmailLoading } = useCreateEmail()
 
@@ -78,28 +78,23 @@ const MailContainer: React.FC = () => {
   const handleComposeEmail = async (emailData: ComposeEmailData) => {
     try {
       const emailInput = {
-        userId: "1",
         to: emailData.to,
-        cc: emailData.cc || undefined,
-        bcc: emailData.bcc || undefined,
+        cc: emailData.cc,
+        bcc: emailData.bcc,
         subject: emailData.subject,
-        textBody: emailData.textBody,
-        htmlBody: emailData.htmlBody || emailData.textBody,
-        preview: (emailData.textBody ?? "").substring(0, 100),
-        importance: emailData.importance,
+        htmlBody: emailData.htmlBody,
         hasAttachment: emailData.hasAttachment,
-        inboxType: 1,
-        isRead: false,
+        importance: emailData.importance,
+        folderId: 1
       }
+
+      console.log("EMAIL INPUT:", emailInput)
 
       await createEmail(emailInput)
       await refetchMailbox()
-
-      alert("Email sent successfully!")
       setIsComposeOpen(false)
     } catch (error) {
       console.error("Failed to send email:", error)
-      alert("Failed to send email. Please try again.")
     }
   }
 
@@ -164,7 +159,7 @@ const MailContainer: React.FC = () => {
           onEmailSent={() => {
             console.log("Correo repsondido");
             refetchMailbox()
-        }}
+          }}
         />
       )}
 
