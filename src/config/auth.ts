@@ -1,7 +1,7 @@
 
 export const authConfig = {
-  verifyEmailEndpoint: "http://localhost:4000/api/auth/verify-email",
-  loginEndpoint: "http://localhost:4000/api/auth/login",
+  verifyEmailEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/verify-email`,
+  loginEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/login`,
   labels: {
     emailPlaceholder: "Email",
     passwordPlaceholder: "Password",
