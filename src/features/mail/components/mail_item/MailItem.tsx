@@ -13,10 +13,8 @@ interface MailItemProps {
 
 const MailItem: React.FC<MailItemProps> = ({ mail, isSelected, onClick, isLast = false }) => {
 
-  // Tomamos mail.date o mail.inserted_at
   const rawDate = mail.date ?? mail.inserted_at ?? null
 
-  // Creamos el objeto Date de forma segura
   const dateObj = rawDate
     ? new Date(rawDate.replace(" ", "T"))
     : new Date()
@@ -62,22 +60,17 @@ const MailItem: React.FC<MailItemProps> = ({ mail, isSelected, onClick, isLast =
       <div className={styles.mailItemContent}>
         {/* Main row */}
         <div className={styles.mainRow}>
-          <div className={styles.senderSection}>
-            <span className={styles.sender}>
-              {mail.senderName ?? mail.senderEmail} {/* si no hay nombre, usar email */}
-            </span>
-            {!mail.isRead && <span className={styles.unreadIndicator} aria-label="Unread" />}
+          <div className={styles.sender}>
+            {mail.senderName ?? mail.senderEmail}
           </div>
 
-
-          <div className={styles.subjectSection}>
-            <span className={styles.subject}>{mail.subject}</span>
+          <div className={styles.date}>
+            {formattedDate}
           </div>
+        </div>
 
-          <div className={styles.dateSection}>
-            <span className={styles.date}>{formattedDate}</span>
-            <span className={styles.time}>{formattedTime}</span>
-          </div>
+        <div className={styles.subjectRow}>
+          <span className={styles.subject}>{mail.subject}</span>
         </div>
 
         {/* Preview row */}

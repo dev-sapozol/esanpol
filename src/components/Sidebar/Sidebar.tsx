@@ -13,7 +13,6 @@ interface SidebarProps {
   onCompose: () => void
 }
 
-
 // Icon mapping for each section
 const sectionIcons: Record<string, string> = {
   inbox: "📥",
@@ -23,15 +22,24 @@ const sectionIcons: Record<string, string> = {
   trash: "🗑️",
 }
 
+// SVG pencil/compose icon
+const ComposeIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path
+      d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+      fill="currentColor"
+    />
+  </svg>
+)
+
 const Sidebar: React.FC<SidebarProps> = ({
   sections,
   isCollapsed,
   onToggle,
   currentSection,
-  onCompose
+  onCompose,
 }) => {
   const navigate = useNavigate()
-  const location = useLocation()
 
   const handleSectionClick = (sectionId: string) => {
     navigate(`/mail/#${sectionId}`)
@@ -42,7 +50,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar Header */}
       <div className={styles.sidebarHeader}>
-        <button className={styles.toggleButton} onClick={onToggle} aria-label="Toggle sidebar" type="button">
+        <button
+          className={styles.toggleButton}
+          onClick={onToggle}
+          aria-label="Toggle sidebar"
+          type="button"
+        >
           <span className={styles.hamburgerIcon}>☰</span>
         </button>
         {!isCollapsed && <h2 className={styles.sidebarTitle}>Mail</h2>}
@@ -51,24 +64,34 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Compose Button */}
       <div className={styles.composeSection}>
         {!isCollapsed ? (
-          <button className={styles.composeButton} onClick={onCompose} type="button">
-            <span className={styles.composeIcon}>✉️</span>
-            <span className={styles.composeText}>Redactar correo</span>
+          <button
+            className={styles.composeButton}
+            onClick={onCompose}
+            type="button"
+            aria-label="Compose email"
+          >
+            <span className={styles.composeIcon}>
+              <ComposeIcon />
+            </span>
+            <span className={styles.composeText}>Write</span>
           </button>
         ) : (
           <button
             className={styles.composeButtonCollapsed}
             onClick={onCompose}
             type="button"
-            title="Redactar correo"
+            title="Compose email"
+            aria-label="Compose email"
           >
-            <span className={styles.composeIcon}>✉️</span>
+            <span className={styles.composeIcon}>
+              <ComposeIcon />
+            </span>
           </button>
         )}
       </div>
 
       {/* Navigation Menu */}
-      <nav className={styles.sidebarNav} role="navigation">
+      <nav className={styles.sidebarNav} role="navigation" aria-label="Secciones de correo">
         {sections.map((section) => {
           const isActive = currentSection === section.id
           const icon = sectionIcons[section.id] || "📁"
@@ -79,16 +102,25 @@ const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleSectionClick(section.id)}
               className={`${styles.navItem} ${isActive ? styles.active : ""} ${isCollapsed ? styles.collapsed : ""}`}
               title={isCollapsed ? section.name : undefined}
+              aria-current={isActive ? "page" : undefined}
               type="button"
             >
               <span className={styles.navIcon}>{icon}</span>
+
               {!isCollapsed && (
                 <>
                   <span className={styles.navLabel}>{section.name}</span>
-                  {section.count && section.count > 0 && (
+                  {section.count != null && section.count > 0 && (
                     <span className={styles.navCount}>{section.count}</span>
                   )}
                 </>
+              )}
+
+              {/* Badge visible only when collapsed */}
+              {isCollapsed && section.count != null && section.count > 0 && (
+                <span className={styles.navCountCollapsed} aria-label={`${section.count} sin leer`}>
+                  {section.count > 99 ? "99+" : section.count}
+                </span>
               )}
             </button>
           )
@@ -99,17 +131,16 @@ const Sidebar: React.FC<SidebarProps> = ({
       {!isCollapsed && (
         <div className={styles.sidebarFooter}>
           <div className={styles.footerInfo}>
-            <span className={styles.footerText}>Storage</span>
+            <span className={styles.footerText}>Almacenamiento</span>
             <div className={styles.storageBar}>
               <div className={styles.storageProgress} style={{ width: "75%" }} />
             </div>
-            <span className={styles.storageText}>11.2 GB of 15 GB used</span>
+            <span className={styles.storageText}>11.2 GB de 15 GB usados</span>
           </div>
         </div>
       )}
     </div>
   )
-
 }
 
 export default Sidebar

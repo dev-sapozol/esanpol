@@ -1,26 +1,181 @@
-.loginContainer {
+.login {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  position: relative;
+  background: var(--surface);
+  color: var(--text);
 }
 
-.loginBox {
+.logoRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.form {
   display: flex;
   flex-direction: column;
-  width: 320px;
-  gap: 12px;
+  gap: 14px;
+  width: 100%;
 }
 
-.loginBox input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.form h2 {
+  font-size: 22px;
+  font-weight: 500;
 }
 
-.loginBox button {
+.form input {
   padding: 10px;
-  border-radius: 8px;
+  border: 1px solid #707070;
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.form input:focus {
+  outline: none;
+  border-color: #cfcfcf;
+}
+
+.form input:focus-visible {
+  outline: none;
+}
+
+.form button {
+  margin-top: 12px;
+  padding: 10px;
+  background: #0067b8;
   border: none;
+  color: white;
+  border-radius: 4px;
   cursor: pointer;
+}
+
+.form button:hover {
+  background: #005da6;
+}
+
+.emailRow {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.emailRow p {
+  font-weight: 300;
+  font-size: 13px;
+}
+
+.emailRow h3,
+.emailRow p {
+  margin: 0;
+}
+
+.email {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 12px;
+  font-size: 13px;
+  text-align: center;
+  background: var(--surface);
+  border-top: 1px solid #5c5a5a;
+  border-bottom: 1px solid #5c5a5a;
+  margin: 0 14px;
+  z-index: 1;
+}
+
+.email::before,
+.email::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background: inherit;
+  z-index: -1;
+}
+
+/* Pico izquierdo (<) */
+.email::before {
+  left: -10.5px;
+  transform: translateY(-50%) rotate(45deg);
+  border-bottom: 1px solid #5c5a5a;
+  border-left: 1px solid #5c5a5a;
+  border-radius: 0 0 0 2px;
+}
+
+/* Pico derecho (>) */
+.email::after {
+  right: -10.5px;
+  transform: translateY(-50%) rotate(45deg);
+  border-top: 1px solid #5c5a5a;
+  border-right: 1px solid #5c5a5a;
+  border-radius: 0 2px 0 0;
+}
+
+.backArrow {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+.backArrow:hover {
+  color: #000;
+}
+
+.back {
+  background: none;
+  border: none;
+  color: #0067b8;
+  cursor: pointer;
+}
+
+.field {
+  position: relative;
+  width: 100%;
+}
+
+.field input {
+  width: 100%;
+  padding: 14px 10px;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  font-size: 14px;
+  background: transparent;
+}
+
+.field label {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 14px;
+  pointer-events: none;
+  transition: 0.2s ease;
+  background: var(--surface);
+  padding: 0 4px;
+}
+
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label {
+  top: -8px;
+  transform: scale(0.85);
+  color: #0067b8;
 }

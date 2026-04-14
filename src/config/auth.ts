@@ -8,6 +8,7 @@ export const authConfig = {
     emailButton: "Next",
     passwordButton: "Login",
     invalidEmail: "Email not found",
+    back: "Back",
   },
   onSuccess: (token: string) => console.log("Logged in", token),
   onError: (msg: string) => console.error(msg),

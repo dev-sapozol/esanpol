@@ -24,7 +24,7 @@ export async function authFetch(url: string, options: RequestInit = {}) {
       ...options,
       headers: {
         ...options.headers,
-        "Authorization": `Bearer ${newToken}`,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         "Content-Type": "application/json",
       },
       credentials: "include"

@@ -16,6 +16,7 @@ import { useMailbox } from "./hooks/useMailbox"
 import { useCreateEmail } from "./hooks/useCreateEmail"
 
 import styles from "./MailContainer.module.css"
+import SidebarAI from "../../components/SidebarAI/SidebarAI"
 
 const FOLDER_MAP: Record<MailSection, { folder_id: number; folder_type: "SYSTEM" }> = {
   inbox: { folder_id: 1, folder_type: "SYSTEM" },
@@ -27,8 +28,15 @@ const FOLDER_MAP: Record<MailSection, { folder_id: number; folder_type: "SYSTEM"
   templates: { folder_id: 7, folder_type: "SYSTEM" },
   system: { folder_id: 8, folder_type: "SYSTEM" },
 }
+interface MailContainerProps {
+  darkMode: boolean
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const MailContainer: React.FC = () => {
+const MailContainer: React.FC<MailContainerProps> = ({
+  darkMode,
+  setDarkMode
+}) => {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -37,6 +45,10 @@ const MailContainer: React.FC = () => {
   const [isComposeOpen, setIsComposeOpen] = useState(false)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     const saved = localStorage.getItem("mail-sidebar-collapsed")
+    return saved ? JSON.parse(saved) : false
+  })
+  const [isSidebarAICollapsed, setIsSidebarAICollapsed] = useState(() => {
+    const saved = localStorage.getItem("mail-sidebar-ai-collapsed")
     return saved ? JSON.parse(saved) : false
   })
 
@@ -51,6 +63,10 @@ const MailContainer: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("mail-sidebar-collapsed", JSON.stringify(isSidebarCollapsed))
   }, [isSidebarCollapsed])
+
+  useEffect(() => {
+    localStorage.setItem("mail-sidebar-ai-collapsed", JSON.stringify(isSidebarAICollapsed))
+  }, [isSidebarAICollapsed])
 
   useEffect(() => {
     if (location.pathname === "/mail" && !location.hash) {
@@ -104,7 +120,7 @@ const MailContainer: React.FC = () => {
 
   return (
     <div className={styles.mailContainer}>
-      <MailNavbar />
+      <MailNavbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
       <div className={styles.innerLayout}>
         <aside className={styles.sidebarSection}>
@@ -144,12 +160,21 @@ const MailContainer: React.FC = () => {
 
           <footer className={styles.mailListFooter}>
             <div className={styles.footerContent}>
-              <span className={styles.mailCount}>
-                {mailboxLoading ? "…" : `${mails.length} messages`}
+              <span className={styles.textFooter}>
+                Project by Sebastian Pozo - 2026 - Frontend and Backend Development
               </span>
             </div>
           </footer>
         </main>
+
+        <aside className={styles.sidebarAISection}>
+          <SidebarAI
+            isCollapsed={isSidebarAICollapsed}
+            onToggle={() => setIsSidebarAICollapsed(!isSidebarAICollapsed)}
+            currentSection={currentSection}
+            onCompose={() => setIsComposeOpen(true)}
+          />
+        </aside>
       </div>
 
       {selectedMail && (
@@ -157,7 +182,7 @@ const MailContainer: React.FC = () => {
           mailId={selectedMail.id}
           onClose={() => setSelectedMail(null)}
           onEmailSent={() => {
-            console.log("Correo repsondido");
+            console.log("Correo respondido");
             refetchMailbox()
           }}
         />

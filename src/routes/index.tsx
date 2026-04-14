@@ -10,7 +10,15 @@ import Recovery from "../features/auth/recovery/Recovery"
 import { authConfig } from "../config/auth";
 import { PrivateRoute } from "./PrivateRoute";
 
-const AppRoutes: React.FC = () => {
+type AppRoutesProps = {
+  darkMode: boolean
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const AppRoutes: React.FC<AppRoutesProps> = ({
+  darkMode,
+  setDarkMode
+}) => {
   return (
     <Routes>
       {/* Public routes */}
@@ -25,7 +33,10 @@ const AppRoutes: React.FC = () => {
         path="/mail/*"
         element={
           <PrivateRoute>
-            <MailContainer />
+            <MailContainer
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+            />
           </PrivateRoute>
         }
       />

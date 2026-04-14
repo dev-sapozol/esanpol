@@ -22,10 +22,10 @@ export interface MailSectionConfig {
 }
 
 export interface ComposeEmailData {
-  to: string
-  cc?: string
-  bcc?: string
-  subject?: string
+  to?: string[] | string
+  cc?: string[] | string
+  bcc?: string[] | string
+  subject: string
   htmlBody?: string
   importance?: "normal" | "high"
   hasAttachment?: boolean

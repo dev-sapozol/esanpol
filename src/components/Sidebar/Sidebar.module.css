@@ -2,8 +2,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: white;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--surface);
   overflow: hidden;
 }
 
@@ -14,7 +13,7 @@
 /* Header */
 .sidebarHeader {
   padding: 16px 20px;
-  border-bottom: 1px solid #e1e5e9;
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 16px;
@@ -44,12 +43,11 @@
 }
 
 .toggleButton:hover {
-  background-color: #f1f3f4;
+  background: var(--surface-hover);
   color: #202124;
 }
 
 .toggleButton:focus {
-  outline: 2px solid #4285f4;
   outline-offset: 2px;
 }
 
@@ -61,7 +59,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 400;
-  color: #202124;
+  color: var(--text);
   white-space: nowrap;
   opacity: 1;
   transition: opacity 0.2s ease;
@@ -73,45 +71,52 @@
   overflow: hidden;
 }
 
-/* Compose Section */
+/* ─── Compose Section ─── */
 .composeSection {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f1f3f4;
-}
-
-.collapsed .composeSection {
-  padding: 16px 12px;
+  padding: 16px 14px;
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: center;
 }
 
+.collapsed .composeSection {
+  padding: 14px 12px;
+}
+
 .composeButton {
   width: 100%;
-  background: linear-gradient(135deg, #1a73e8, #4285f4);
+  height: 33px;
+  background: #1a73e8;
   color: white;
   border: none;
-  border-radius: 24px;
-  padding: 12px 24px;
+  border-radius: 18px;
+  padding: 11px 20px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+  justify-content: center;
+  gap: 10px;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 2px 6px rgba(26, 115, 232, 0.35);
+  letter-spacing: 0.01em;
 }
 
 .composeButton:hover {
-  background: linear-gradient(135deg, #1557b0, #3367d6);
+  box-shadow: 0 4px 14px rgba(26, 115, 232, 0.45);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.4);
+}
+
+.composeButton:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(26, 115, 232, 0.3);
 }
 
 .composeButtonCollapsed {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #1a73e8, #4285f4);
+  width: 33px;
+  height: 33px;
+  background: #1a73e8;
   color: white;
   border: none;
   border-radius: 50%;
@@ -119,86 +124,101 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.35);
+  flex-shrink: 0;
 }
 
 .composeButtonCollapsed:hover {
-  background: linear-gradient(135deg, #1557b0, #3367d6);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.4);
+  box-shadow: 0 4px 14px rgba(26, 115, 232, 0.45);
+  transform: translateY(-1px) scale(1.05);
+}
+
+.composeButtonCollapsed:active {
+  transform: translateY(0) scale(1);
+}
+
+.composeButtonCollapsed:focus,
+.composeButton:focus { 
+  outline-offset: 2px;
 }
 
 .composeIcon {
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.composeIcon svg {
+  width: 17px;
+  height: 17px;
 }
 
 .composeText {
   white-space: nowrap;
 }
 
-/* Navigation */
+/* ─── Navigation ─── */
 .sidebarNav {
   flex: 1;
-  padding: 8px 0;
+  padding: 8px 10px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .navItem {
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   border: none;
   background: none;
   text-align: left;
   cursor: pointer;
   font-size: 14px;
-  color: #5f6368;
-  transition: all 0.2s ease;
+  color: var(--text);
+  transition: background 0.15s ease, color 0.15s ease;
   position: relative;
-  min-height: 40px;
+  min-height: 42px;
+  border-radius: 22px;
+  padding: 0 16px;
+  gap: 12px;
 }
 
 .navItem.collapsed {
-  padding: 8px 12px;
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  align-self: center;
+  border-radius: 50%;
   justify-content: center;
 }
 
 .navItem:hover {
-  background-color: #f8f9fa;
+  background: var(--surface-secondary);
 }
 
 .navItem.active {
-  background-color: #e8f0fe;
-  color: #1a73e8;
-  font-weight: 500;
+  background: var(--surface-hover);
+  font-weight: 600;
 }
 
+/* Remove the left bar — pill shape replaces it */
 .navItem.active::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background-color: #1a73e8;
-}
-
-.navItem.collapsed.active::before {
   display: none;
 }
 
 .navIcon {
-  font-size: 16px;
-  margin-right: 12px;
+  font-size: 17px;
   flex-shrink: 0;
   width: 20px;
   text-align: center;
-}
-
-.collapsed .navIcon {
-  margin-right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navLabel {
@@ -209,42 +229,42 @@
 }
 
 .navCount {
-  background-color: #f1f3f4;
+  background-color: transparent;
   color: #5f6368;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 10px;
-  min-width: 16px;
-  text-align: center;
+  font-size: 12px;
+  padding: 0;
+  border-radius: 0;
+  min-width: unset;
+  text-align: right;
   font-weight: 500;
-  margin-left: 8px;
+  margin-left: auto;
 }
 
 .navItem.active .navCount {
-  background-color: #1a73e8;
-  color: white;
+  color: #1a73e8;
+  background-color: transparent;
 }
 
 .navCountCollapsed {
   position: absolute;
   top: 4px;
-  right: 4px;
+  right: 3px;
   background-color: #ea4335;
   color: white;
-  font-size: 10px;
+  font-size: 9px;
   padding: 2px 4px;
   border-radius: 8px;
   min-width: 14px;
   text-align: center;
-  font-weight: 600;
-  line-height: 1;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-/* Footer */
+/* ─── Footer ─── */
 .sidebarFooter {
-  padding: 16px 20px;
-  border-top: 1px solid #e1e5e9;
-  background-color: #f8f9fa;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
 }
 
 .footerInfo {
@@ -255,7 +275,7 @@
 
 .footerText {
   font-size: 12px;
-  color: #5f6368;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -278,7 +298,7 @@
   color: #5f6368;
 }
 
-/* Responsive adjustments */
+/* ─── Responsive ─── */
 @media (max-width: 768px) {
   .sidebar {
     width: 64px !important;
@@ -295,8 +315,6 @@
 
   .composeSection {
     padding: 12px;
-    display: flex;
-    justify-content: center;
   }
 
   .composeButton {
@@ -304,7 +322,11 @@
   }
 
   .navItem {
-    padding: 8px 12px;
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    align-self: center;
+    border-radius: 50%;
     justify-content: center;
   }
 

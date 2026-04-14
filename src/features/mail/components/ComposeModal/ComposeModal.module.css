@@ -6,6 +6,7 @@
   --text-color: #1f1f1f;
   --text-secondary: #444746;
   --danger: #b3261e;
+  --border: #a59d9d;
 }
 
 /* --- Layout Principal (CENTRADO) --- */
@@ -426,7 +427,7 @@
   display: block;
   width: 100%;
   margin-top: 20px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border);
   animation: fadeIn 0.3s ease;
 }
 
@@ -439,6 +440,42 @@
 
 .inlineEditorHeight {
   min-height: 200px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 85%;
+  right: 39%;
+  background: #cc9829;
+  color: var(--text);
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  z-index: 999999;
+  user-select: none;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 
 @keyframes fadeIn {

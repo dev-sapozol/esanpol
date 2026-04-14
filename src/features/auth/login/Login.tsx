@@ -4,6 +4,7 @@ import type React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import styles from "./Login.module.css";
+import logo from "../../../assets/LogoSPL.png";
 
 type LoginProps = {
   verifyEmailEndpoint: string;
@@ -14,6 +15,7 @@ type LoginProps = {
     emailButton: string;
     passwordButton: string;
     invalidEmail: string;
+    back: string;
   };
   onSuccess: (token: string) => void;
   onError: (message: string) => void;
@@ -26,24 +28,20 @@ const Login: React.FC<LoginProps> = ({
   onSuccess,
   onError
 }) => {
+
   const [step, setStep] = useState<"email" | "password">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // VERIFY EMAIL
-
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    setLoading(true)
+    setLoading(true);
 
     try {
       const res = await fetch(verifyEmailEndpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
@@ -58,29 +56,25 @@ const Login: React.FC<LoginProps> = ({
       onError(err.message);
     }
 
-    setLoading(false)
+    setLoading(false);
   };
-
-  // LOGIN
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
 
     try {
       const res = await fetch(loginEndpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
 
       if (data?.token) {
-        handleLoginSuccess(data.token);
+        sessionStorage.setItem("access_token", data.token);
+        window.location.href = "/mail";
       } else {
         onError(data?.message);
       }
@@ -91,66 +85,99 @@ const Login: React.FC<LoginProps> = ({
     setLoading(false);
   };
 
-  const handleLoginSuccess = (token: string) => {
-    sessionStorage.setItem("access_token", token);
-    window.location.href = "/mail";
-  };
-
-  // ANIMATIONS
-
   const slide = {
     initial: { opacity: 0, x: 40 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -40 },
     transition: { duration: 0.25 },
   };
+
   return (
-    <div className={styles.loginContainer}>
+    <div className={styles.login}>
       <AnimatePresence mode="wait">
+
         {step === "email" && (
           <motion.form
-            key="email-step"
+            key="email"
+            id="email"
             {...slide}
             onSubmit={handleEmailSubmit}
-            className={styles.loginBox}
+            className={styles.form}
           >
-            <input
-              type="email"
-              placeholder={labels.emailPlaceholder}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <div className={styles.logoRow}>
+              <img className={styles.logo} src={logo} alt="Logo SPL" />
+              <h2>Esanpol</h2>
+            </div>
 
-            <button type="submit" disabled={loading}>
+            <div className={styles.emailRow}>
+              <h3>Sign in</h3>
+              <p>Use your email from Esanpol</p>
+            </div>
+
+            <div className={styles.field}>
+              <input
+                type="email"
+                placeholder=" "
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <label>{labels.emailPlaceholder}</label>
+            </div>
+
+            <button disabled={loading}>
               {labels.emailButton}
             </button>
+
           </motion.form>
         )}
 
         {step === "password" && (
           <motion.form
-            key="password-step"
+            key="password"
             {...slide}
             onSubmit={handlePasswordSubmit}
-            className={styles.loginBox}
+            className={styles.form}
           >
-            <input
-              type="password"
-              placeholder={labels.passwordPlaceholder}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
 
-            <button type="submit" disabled={loading}>
+            <div className={styles.backArrow} onClick={() => setStep("email")}>
+              ←
+            </div>
+
+            <div className={styles.logoRow}>
+              <img className={styles.logo} src={logo} alt="Logo SPL" />
+              <h2>Esanpol</h2>
+            </div>
+
+            <div className={styles.emailRow}>
+              <div className={styles.email}>
+                <span>{email}</span>
+              </div>
+              <p>Enter password</p>
+            </div>
+
+            <div className={styles.field}>
+              <input
+                type="password"
+                placeholder=" "
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <label>{labels.passwordPlaceholder}</label>
+            </div>
+
+            <button disabled={loading}>
               {labels.passwordButton}
             </button>
+
           </motion.form>
         )}
+
       </AnimatePresence>
+
     </div>
   );
 };
 
-export default Login
+export default Login;

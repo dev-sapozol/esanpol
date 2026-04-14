@@ -1,20 +1,26 @@
 .container {
   width: 100%;
-  height: 100%;
-  /* background: ; */
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  background-image: url("/src//assets/BackgroundAuthEsanpol.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .card {
   width: 350px;
-  height: 320px;
   padding: 1.5rem;
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  background:var(--surface);
   box-shadow: 0 8px 24px rgba(0,0,0,0.25);
   position: relative;
   overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

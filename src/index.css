@@ -1,0 +1,71 @@
+@font-face{
+  font-family: "Gontserrat";
+  src: url("../src/fonts/gontserrat/Gontserrat-Regular.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face{
+  font-family: "Gontserrat";
+  src: url("../src/fonts/gontserrat/Gontserrat-Medium.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face{
+  font-family: "Gontserrat";
+  src: url("../src/fonts/gontserrat/Gontserrat-Bold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Gontserrat", system-ui, -apple-system, sans-serif;
+}
+
+body button {
+  font-family: "Gontserrat", system-ui, -apple-system, sans-serif;
+  font-weight: 300;
+}
+
+:root {
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --surface-secondary: #e0e3e6;
+  --surface-hover: #e5e7eb;
+  --text: #202124;
+  --text-secondary: #5f6368;
+  --border: #bdbec4;
+  --input: #e5e7eb;
+
+  --user-msg: #8f8f99;
+  --ai-msg: #bbc0ca;
+}
+
+.dark {
+  --bg: #0f172a;
+  --surface: #171A1A;
+  --surface-secondary: #20252C;
+  --surface-hover: #334155;
+  --text: #e5e7eb;
+  --text-secondary: #c2c3c7;
+  --border: #334155;
+  --input: #414244;
+
+  --user-msg: #6585df;
+  --ai-msg: #68696b;
+} 

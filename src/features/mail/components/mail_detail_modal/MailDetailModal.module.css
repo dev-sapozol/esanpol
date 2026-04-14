@@ -4,14 +4,14 @@
   --text: #202124;
   --text-secondary: #5f6368;
   --bg-hover: #f1f3f4;
-  --border: #e0e0e0;
+  --border: #a59d9d;
 }
 
 /* Overlay */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -303,13 +303,11 @@
 
 .inlineReplyContainer {
   margin-top: 10px;
-  border: 1px solid #dcdcdc;
-  /* Borde alrededor de la respuesta */
+  border: 1px solid var(--border);
   border-radius: 8px;
   background: #fff;
   padding: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  /* Sombra sutil para destacar */
   animation: slideDown 0.3s ease;
 }
 
@@ -329,11 +327,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* Para separar info del botón X */
   padding: 8px 12px;
   background: #f8f9fa;
-  /* Fondo gris claro para diferenciarlo del email original */
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }

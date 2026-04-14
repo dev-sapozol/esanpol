@@ -11,6 +11,12 @@ import type { Mail, MailSection } from "../types";
 const preloadMailbox = gql`
   query PreloadMailbox($limit: Int) {
     preload_mailbox(limit: $limit) {
+      user {
+        id
+        name
+        email
+        avatar_url
+      }
       system_folders {
         id
         name
@@ -53,6 +59,7 @@ export function useMailbox(limit = 50) {
     fetchPolicy: "network-only",
   });
 
+  const user = data?.preload_mailbox?.user;
   const systemFolders = data?.preload_mailbox?.system_folders ?? [];
   const userFolders = data?.preload_mailbox?.user_folders ?? [];
   const emailsByFolderRaw = data?.preload_mailbox?.emails_by_folder ?? [];
@@ -88,6 +95,7 @@ export function useMailbox(limit = 50) {
   );
 
   return {
+    user,
     systemFolders,
     userFolders,
     emailsByFolder,

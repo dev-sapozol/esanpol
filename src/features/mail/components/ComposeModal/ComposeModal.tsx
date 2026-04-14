@@ -229,7 +229,7 @@ const EditorToolbar: React.FC<{ editor: Editor | null }> = ({ editor }) => {
           value={editor.getAttributes("textStyle").fontSize || ""}
         >
           <option value="" disabled>
-            Tamaño
+            size
           </option>
           <option value="12px">Pequeño</option>
           <option value="16px">Normal</option>
@@ -320,6 +320,8 @@ const EditorToolbar: React.FC<{ editor: Editor | null }> = ({ editor }) => {
 }
 
 export default function ComposeModal({ isOpen, onClose, onSend, loading, initialData, isInline }: ComposeModalProps) {
+  const [toast, setToast] = useState<string | null>(null)
+  const [hasShownToast, setHasShownToast] = useState(false)
   const [toList, setToList] = useState<string[]>([])
   const [ccList, setCcList] = useState<string[]>([])
   const [bccList, setBccList] = useState<string[]>([])
@@ -371,6 +373,22 @@ export default function ComposeModal({ isOpen, onClose, onSend, loading, initial
     content: "",
   })
 
+  const normalizeEmails = (value?: string[] | string): string[] => {
+    if (!value) return []
+    if (Array.isArray(value)) return value
+    return value.split(",").map((e: string) => e.trim())
+  }
+
+  useEffect(() => {
+    if (isOpen && !hasShownToast) {
+      setToast('Please add at least one recipient using the "Add email" button.')
+      setHasShownToast(true)
+
+      const timer = setTimeout(() => setToast(null), 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen, hasShownToast])
+
   useEffect(() => {
     if (!editor) return
 
@@ -387,28 +405,34 @@ export default function ComposeModal({ isOpen, onClose, onSend, loading, initial
     }
   }, [editor])
 
+  const isEditorReady = (editor: Editor | null) => {
+    return editor && !editor.isDestroyed && editor.view
+  }
+
   useEffect(() => {
-    if (isOpen && initialData) {
-      if (initialData.to) setToList(initialData.to)
+    if (!isOpen || !initialData || !editor) return
 
-      if (initialData.cc && initialData.cc.length > 0) {
-        setCcList(initialData.cc)
-        setShowCc(true)
-      }
+    const to = normalizeEmails(initialData.to)
+    const cc = normalizeEmails(initialData.cc)
+    const bcc = normalizeEmails(initialData.bcc)
 
-      if (initialData.bcc && initialData.bcc.length > 0) {
-        setBccList(initialData.bcc)
-        setShowBcc(true)
-      }
+    setToList(to)
 
-      if (initialData.subject) setSubject(initialData.subject)
+    if (cc.length) {
+      setCcList(cc)
+      setShowCc(true)
+    }
 
-      if (initialData.htmlBody && editor) {
-        setTimeout(() => {
-          editor.commands.setContent(initialData.htmlBody!)
-          editor.commands.focus("start")
-        }, 50)
-      }
+    if (bcc.length) {
+      setBccList(bcc)
+      setShowBcc(true)
+    }
+
+    if (initialData.subject) setSubject(initialData.subject)
+
+    if (initialData.htmlBody && isEditorReady(editor)) {
+      editor.commands.setContent(initialData.htmlBody)
+      editor.commands.focus("start")
     }
   }, [isOpen, initialData, editor])
 
@@ -434,108 +458,115 @@ export default function ComposeModal({ isOpen, onClose, onSend, loading, initial
     })
   }
 
-  const Wrapper = isInline ? "div" : "div"
   const wrapperClass = isInline ? styles.inlineWrapper : styles.overlay
   const containerClass = isInline ? styles.inlineContainer : `${styles.modal} ${isFull ? styles.fullscreen : ""}`
 
-return (
-    <div
-      className={wrapperClass}
-      onClick={() => {
-        if (!isInline && !isFull) onClose()
-      }}
-    >
-      <div className={containerClass} onClick={(e) => e.stopPropagation()}>
-        
-        {/* Header: SOLO si NO es inline */}
-        {!isInline && (
-          <div className={styles.header}>
-            <div className={styles.headerTitle}>Nuevo mensaje</div>
-            <div className={styles.headerControls}>
-              <button onClick={() => setIsFull(!isFull)} title={isFull ? "Salir pantalla completa" : "Pantalla completa"}>
-                {isFull ? "❐" : "□"}
-              </button>
-              <button onClick={onClose} title="Guardar y cerrar" className={styles.closeBtn}>×</button>
+  return (
+    <>
+      <div
+        className={wrapperClass}
+        onClick={() => {
+          if (!isInline && !isFull) onClose()
+        }}
+      >
+        <div className={containerClass} onClick={(e) => e.stopPropagation()}>
+
+          {/* Header: SOLO si NO es inline */}
+          {!isInline && (
+            <div className={styles.header}>
+              <div className={styles.headerTitle}>New message</div>
+              <div className={styles.headerControls}>
+                <button onClick={() => setIsFull(!isFull)} title={isFull ? "Exit fullscreen" : "Fullscreen"}>
+                  {isFull ? "❐" : "□"}
+                </button>
+                <button onClick={onClose} title="Close" className={styles.closeBtn}>×</button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Destinatarios */}
-        <div className={styles.recipientsArea}>
-          <RecipientField
-            label="Para" list={toList} setList={setToList} autoFocus={!isInline}
-            rightActions={(!showCc || !showBcc) && (
-              <div className={styles.ccBccLinks}>
-                {!showCc && <span onClick={() => setShowCc(true)}>CC</span>}
-                {!showBcc && <span onClick={() => setShowBcc(true)}>CCO</span>}
-              </div>
-            )}
-          />
-          {showCc && <RecipientField label="Cc" list={ccList} setList={setCcList} onHide={() => { setShowCc(false); setCcList([]) }} />}
-          {showBcc && <RecipientField label="Cco" list={bccList} setList={setBccList} onHide={() => { setShowBcc(false); setBccList([]) }} />}
-        </div>
-
-        {/* Asunto: Opcionalmente oculto en modo inline para ahorrar espacio*/}
-        {!isInline && (
-          <div className={styles.subjectRow}>
-            <input
-              className={styles.subjectInput}
-              placeholder="Asunto"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            />
-          </div>
-        )}
-
-        {/* Toolbar */}
-        <EditorToolbar editor={editor} />
-
-        {/* Editor */}
-        <div 
-           className={`${styles.editorContainer} ${isInline ? styles.inlineEditorHeight : ''}`} 
-           onClick={() => editor?.commands.focus()}
-        >
-          <EditorContent editor={editor} className={styles.tiptapEditor} />
-        </div>
-
-        {/* Adjuntos */}
-        {attachments.length > 0 && (
-          <div className={styles.attachmentsList}>
-            {attachments.map((file, i) => (
-              <div key={i} className={styles.attachmentChip}>
-                <div className={styles.fileIcon}>📄</div>
-                <div className={styles.fileInfo}>
-                  <span className={styles.fileName}>{file.name}</span>
-                  <span className={styles.fileSize}>{(file.size / 1024).toFixed(0)} KB</span>
+          {/* Destinatarios */}
+          <div className={styles.recipientsArea}>
+            <RecipientField
+              label="To" list={toList} setList={setToList} autoFocus={!isInline}
+              rightActions={(!showCc || !showBcc) && (
+                <div className={styles.ccBccLinks}>
+                  {!showCc && <span onClick={() => setShowCc(true)}>CC</span>}
+                  {!showBcc && <span onClick={() => setShowBcc(true)}>CCO</span>}
                 </div>
-                <button onClick={() => setAttachments((prev) => prev.filter((_, idx) => idx !== i))}>×</button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className={styles.footer}>
-          <div className={styles.footerLeft}>
-            <button
-              className={styles.sendBtn}
-              onClick={handleSend}
-              disabled={loading || (!toList.length && !ccList.length && !bccList.length)}
-            >
-              {loading ? "Enviando..." : "Enviar"}
-            </button>
-
-            <label className={styles.iconBtn} title="Adjuntar archivos">
-              📎
-              <input type="file" multiple onChange={handleFileChange} hidden />
-            </label>
+              )}
+            />
+            {showCc && <RecipientField label="Cc" list={ccList} setList={setCcList} onHide={() => { setShowCc(false); setCcList([]) }} />}
+            {showBcc && <RecipientField label="Cco" list={bccList} setList={setBccList} onHide={() => { setShowBcc(false); setBccList([]) }} />}
           </div>
 
-          <div className={styles.footerRight}>
-            <button className={styles.iconBtn} onClick={onClose} title="Descartar">🗑</button>
+          {/* Asunto: Opcionalmente oculto en modo inline para ahorrar espacio*/}
+          {!isInline && (
+            <div className={styles.subjectRow}>
+              <input
+                className={styles.subjectInput}
+                placeholder="Subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+            </div>
+          )}
+
+          {/* Toolbar */}
+          <EditorToolbar editor={editor} />
+
+          {/* Editor */}
+          <div
+            className={`${styles.editorContainer} ${isInline ? styles.inlineEditorHeight : ''}`}
+            onClick={() => editor?.commands.focus()}
+          >
+            <EditorContent editor={editor} className={styles.tiptapEditor} />
+          </div>
+
+          {/* Adjuntos */}
+          {attachments.length > 0 && (
+            <div className={styles.attachmentsList}>
+              {attachments.map((file, i) => (
+                <div key={i} className={styles.attachmentChip}>
+                  <div className={styles.fileIcon}>📄</div>
+                  <div className={styles.fileInfo}>
+                    <span className={styles.fileName}>{file.name}</span>
+                    <span className={styles.fileSize}>{(file.size / 1024).toFixed(0)} KB</span>
+                  </div>
+                  <button onClick={() => setAttachments((prev) => prev.filter((_, idx) => idx !== i))}>×</button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className={styles.footer}>
+            <div className={styles.footerLeft}>
+              <button
+                className={styles.sendBtn}
+                onClick={handleSend}
+                disabled={loading || (!toList.length && !ccList.length && !bccList.length)}
+              >
+                {loading ? "Enviando..." : "Enviar"}
+              </button>
+
+              <label className={styles.iconBtn} title="Adjuntar archivos">
+                📎
+                <input type="file" multiple onChange={handleFileChange} hidden />
+              </label>
+            </div>
+
+            <div className={styles.footerRight}>
+              <button className={styles.iconBtn} onClick={onClose} title="Descartar">🗑</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {toast && (
+        <div className={styles.toast}>
+          {toast}
+        </div>
+      )}
+    </>
   )
 }

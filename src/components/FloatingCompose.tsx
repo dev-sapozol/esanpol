@@ -25,9 +25,7 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
     cc: "",
     bcc: "",
     subject: "",
-    textBody: "",
     htmlBody: "",
-    importance: 1,
     hasAttachment: false,
   })
 
@@ -51,13 +49,25 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
     }))
   }
 
+  const normalizeTo = (to: string | string[] | undefined): string[] => {
+    if (!to) return []
+    if (Array.isArray(to)) return to
+    return to.split(",").map(e => e.trim()).filter(Boolean)
+  }
+
   const handleSend = () => {
-    if (!emailData.to.trim() || !emailData.subject.trim() || !emailData.textBody.trim()) {
+    const toList = normalizeTo(emailData.to)
+
+    if (!toList.length || !emailData.subject?.trim()) {
       alert("Please fill in required fields: To, Subject, and Message")
       return
     }
 
-    onSend(emailData)
+    onSend({
+      ...emailData,
+      to: toList.join(","), // estándar para backend
+    })
+
     handleReset()
   }
 
@@ -67,9 +77,7 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
       cc: "",
       bcc: "",
       subject: "",
-      textBody: "",
       htmlBody: "",
-      importance: 1,
       hasAttachment: false,
     })
     setShowCc(false)
@@ -212,8 +220,8 @@ const FloatingCompose: React.FC<FloatingComposeProps> = ({
             </label>
             <textarea
               id="compose-message"
-              value={emailData.textBody}
-              onChange={(e) => handleInputChange("textBody", e.target.value)}
+              value={emailData.htmlBody}
+              onChange={(e) => handleInputChange("htmlBody", e.target.value)}
               placeholder="Compose your message..."
               required
               aria-required="true"

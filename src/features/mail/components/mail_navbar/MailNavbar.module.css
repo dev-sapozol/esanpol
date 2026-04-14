@@ -1,8 +1,8 @@
 .navbar {
   width: 100%;
   height: 60px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   padding: 0 20px;
@@ -12,10 +12,15 @@
   z-index: 50;
 }
 
-/* Left (logo) */
 .left {
   display: flex;
   align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+
+.left h2, svg {
+  user-select: none;
 }
 
 .logo {
@@ -23,7 +28,6 @@
   object-fit: contain;
 }
 
-/* Center (search bar) */
 .center {
   flex: 1;
   display: flex;
@@ -32,7 +36,7 @@
 
 .searchContainer {
   position: relative;
-  width: 45%;
+  width: 35%;
   min-width: 250px;
 }
 
@@ -40,15 +44,19 @@
   width: 100%;
   padding: 10px 40px 10px 12px;
   border-radius: 20px;
-  border: 1px solid #cbd5e0;
-  background: #f3f4f6;
+  border: 1.5px solid var(--border);
+  background: var(--input);
   outline: none;
   font-size: 14px;
 }
 
 .searchInput:focus {
   border-color: #3b82f6;
-  background: #fff;
+  background: var(--input);
+}
+
+.searchInput::placeholder {
+  color: var(--text);
 }
 
 .searchIcon {
@@ -60,17 +68,10 @@
   opacity: 0.6;
 }
 
-/* Right (username + avatar) */
 .right {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.userName {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
 }
 
 .userAvatar {
@@ -78,4 +79,84 @@
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
+  transition: transform 0.15s;
+}
+
+.userAvatar:hover {
+  transform: scale(1.05);
+}
+
+.avatarWrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.userMenu {
+  position: absolute;
+  right: 0;
+  top: 46px;
+  width: 190px;
+  background: var(--surface);
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: menuFade 0.15s ease;
+  color: var(--text);
+}
+
+.userMenu button {
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.userMenu button:hover {
+  background: var(--surface-hover);
+}
+
+.userInfo {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.userInfo strong {
+  font-weight: 600;
+}
+
+.userInfo span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.addEmail button {
+  height: 24px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 3px;
+  border: var(--border);
+  background: var(--surface-hover);
+  color: var(--text);
+  margin-right: 20px;
+}
+
+@keyframes menuFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

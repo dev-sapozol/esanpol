@@ -89,7 +89,6 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
         parentId: mail.id,
         subject: data.subject,
         htmlBody: data.htmlBody,
-        textBody: data.textBody,
         replyAll: false
       })
 
