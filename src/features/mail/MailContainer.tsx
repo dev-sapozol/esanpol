@@ -153,7 +153,7 @@ const MailContainer: React.FC<MailContainerProps> = ({
           <div className={styles.mailListContent}>
             <MailList
               mails={mails}
-              selectedMailId={selectedMail?.id || null}
+              selectedMailId={selectedMail?.id}
               onMailSelect={handleMailSelect}
             />
           </div>
