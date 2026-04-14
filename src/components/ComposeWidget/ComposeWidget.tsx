@@ -19,9 +19,8 @@ const ComposeWidget: React.FC<ComposeWidgetProps> = ({ isExpanded, onToggle, onS
     cc: "",
     bcc: "",
     subject: "",
-    textBody: "",
     htmlBody: "",
-    importance: 1,
+    importance: "normal",
     hasAttachment: false,
   })
 
@@ -46,8 +45,10 @@ const ComposeWidget: React.FC<ComposeWidgetProps> = ({ isExpanded, onToggle, onS
   }
 
   const handleSend = () => {
-    if (!emailData.to.trim() || !emailData.subject.trim() || !emailData.textBody.trim()) {
-      alert("Please fill in required fields: To, Subject, and Message")
+    const body = emailData.htmlBody?.trim() || ""
+
+    if (!emailData.to?.toString().trim() || !emailData.subject.trim() || !body) {
+      alert("Please fill required fields")
       return
     }
 
@@ -61,9 +62,8 @@ const ComposeWidget: React.FC<ComposeWidgetProps> = ({ isExpanded, onToggle, onS
       cc: "",
       bcc: "",
       subject: "",
-      textBody: "",
       htmlBody: "",
-      importance: 1,
+      importance: "normal",
       hasAttachment: false,
     })
     setShowCc(false)
@@ -218,8 +218,8 @@ const ComposeWidget: React.FC<ComposeWidgetProps> = ({ isExpanded, onToggle, onS
             </label>
             <textarea
               id="compose-message"
-              value={emailData.textBody}
-              onChange={(e) => handleInputChange("textBody", e.target.value)}
+              value={emailData.htmlBody}
+              onChange={(e) => handleInputChange("htmlBody", e.target.value)}
               placeholder="Escribe tu mensaje aquí..."
               className={styles.messageTextarea}
               required
@@ -235,13 +235,12 @@ const ComposeWidget: React.FC<ComposeWidgetProps> = ({ isExpanded, onToggle, onS
               </button>
               <select
                 value={emailData.importance}
-                onChange={(e) => handleInputChange("importance", Number.parseInt(e.target.value))}
+                onChange={(e) => handleInputChange("importance", e.target.value as "normal" | "high")}
                 className={styles.importanceSelect}
                 aria-label="Importancia del email"
               >
-                <option value={1}>Normal</option>
-                <option value={2}>Alta</option>
-                <option value={0}>Baja</option>
+                <option value="normal">Normal</option>
+                <option value="high">Alta</option>
               </select>
             </div>
           </footer>

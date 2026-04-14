@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Mail } from "@mail/types"
+import type { Mail } from "./types"
 import MailItem from "./components/mail_item/MailItem"
 
 interface MailListProps {

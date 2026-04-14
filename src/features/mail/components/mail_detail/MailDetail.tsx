@@ -54,7 +54,7 @@ const MailDetail: React.FC<MailDetailProps> = ({ mail, onBack }) => {
 
           {/* Mail body */}
           <div className={styles.mailBody}>
-            <div className={styles.bodyContent}>{mail.body || mail.preview}</div>
+            <div className={styles.bodyContent}>{mail.preview}</div>
           </div>
 
           {/* Action buttons */}
