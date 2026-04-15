@@ -1,31 +1,57 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { Routes, Route, Navigate } from "react-router-dom"
-import MailContainer from "../features/mail/MailContainer"
-import AuthPage from "../features/auth/AuthPage"
-import Login from "../features/auth/login/Login"
-import Register from "../features/auth/register/Register"
-import Recovery from "../features/auth/recovery/Recovery"
+import type React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
+
 import { authConfig } from "../config/auth";
 import { PrivateRoute } from "./PrivateRoute";
 
 type AppRoutesProps = {
-  darkMode: boolean
-  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>
-}
+  darkMode: boolean;
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const AppRoutes: React.FC<AppRoutesProps> = ({
-  darkMode,
-  setDarkMode
-}) => {
+/**
+ * Lazy loaded pages (code splitting real)
+ */
+const MailContainer = lazy(() => import("../features/mail/MailContainer"));
+const AuthPage = lazy(() => import("../features/auth/AuthPage"));
+const Login = lazy(() => import("../features/auth/login/Login"));
+const Register = lazy(() => import("../features/auth/register/Register"));
+const Recovery = lazy(() => import("../features/auth/recovery/Recovery"));
+
+
+const AppRoutes: React.FC<AppRoutesProps> = ({ darkMode, setDarkMode }) => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/auth" element={<AuthPage />}>
-        <Route path="login" element={<Login {...authConfig} />} />
-        <Route path="register" element={<Register />} />
-        <Route path="recovery" element={<Recovery />} />
+      <Route
+        path="/auth"
+        element={
+          <AuthPage />
+        }
+      >
+        <Route
+          path="login"
+          element={
+            <Login {...authConfig} />
+          }
+        />
+
+        <Route
+          path="register"
+          element={
+            <Register {...authConfig} />
+          }
+        />
+
+        <Route
+          path="recovery"
+          element={
+            <Recovery {...authConfig} />
+          }
+        />
       </Route>
 
       {/* Private routes */}
@@ -33,10 +59,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
         path="/mail/*"
         element={
           <PrivateRoute>
-            <MailContainer
-              darkMode={darkMode}
-              setDarkMode={setDarkMode}
-            />
+            <MailContainer darkMode={darkMode} setDarkMode={setDarkMode} />
           </PrivateRoute>
         }
       />
@@ -47,7 +70,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
       {/* Not found */}
       <Route path="*" element={<div>Page not found</div>} />
     </Routes>
-  )
-}
+  );
+};
 
-export default AppRoutes
+export default AppRoutes;

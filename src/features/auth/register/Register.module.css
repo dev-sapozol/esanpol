@@ -49,6 +49,24 @@
   outline: none;
 }
 
+.form select {
+  padding: 10px;
+  border: 1px solid #707070;
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+}
+
+.form select:focus {
+  outline: none;
+  border-color: #cfcfcf;
+}
+
+.form select:focus-visible {
+  outline: none;
+}
+
 .form button {
   margin-top: 12px;
   padding: 10px;
@@ -61,6 +79,11 @@
 
 .form button:hover {
   background: #005da6;
+}
+
+.form button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
 }
 
 .emailRow {
@@ -151,13 +174,15 @@
   width: 100%;
 }
 
-.field input {
+.field input,
+.field select {
   width: 100%;
   padding: 14px 10px;
   border: 1px solid #cfcfcf;
   border-radius: 4px;
   font-size: 14px;
-  background: transparent;
+  background: var(--surface);
+  color: var(--text);
 }
 
 .field label {
@@ -174,10 +199,87 @@
 }
 
 .field input:focus+label,
-.field input:not(:placeholder-shown)+label {
+.field input:not(:placeholder-shown)+label,
+.field select:focus+label,
+.field select.hasValue+label {
   top: -8px;
   transform: scale(0.85);
   color: #0067b8;
+}
+
+.emailInput {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.emailInput {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.emailInput:focus-within .emailLabel {
+  top: -8px;
+  transform: scale(0.85);
+  color: #0067b8;
+}
+
+.emailInput input:not(:placeholder-shown)~.emailLabel {
+  top: -8px;
+  transform: scale(0.85);
+  color: #0067b8;
+}
+
+.emailLabel {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 14px;
+  pointer-events: none;
+  transition: 0.2s ease;
+  background: var(--surface);
+  padding: 0 4px;
+  z-index: 1;
+}
+
+.emailSuffix {
+  padding: 0 10px 0 4px;
+  font-size: 14px;
+  color: #777;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.alertError {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: #FCEBEB;
+  border: 0.5px solid #F09595;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #791F1F;
+}
+
+.alertError strong {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.alertError p {
+  margin: 0;
 }
 
 .redirectLinks {

@@ -125,6 +125,11 @@ const Login: React.FC<LoginProps> = ({
               <label>{labels.emailPlaceholder}</label>
             </div>
 
+            <div className={styles.redirectLinks}>
+              <span>Don't have an account? <a href="/auth/register">Create one</a></span>
+              <span>Forgot your password? <a href="/auth/change_password">Reset it</a></span>
+            </div>
+
             <button disabled={loading}>
               {labels.emailButton}
             </button>
@@ -165,6 +170,11 @@ const Login: React.FC<LoginProps> = ({
                 required
               />
               <label>{labels.passwordPlaceholder}</label>
+            </div>
+
+            <div className={styles.redirectLinks}>
+              <span>Don't have an account? <a href="/auth/register">Create one</a></span>
+              <span>Forgot your password? <a href="/auth/change_password">Reset it</a></span>
             </div>
 
             <button disabled={loading}>

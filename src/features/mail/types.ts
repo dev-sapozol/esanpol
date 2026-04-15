@@ -35,4 +35,13 @@ export interface ComposeModalProps {
   isOpen: boolean
   onClose: () => void
   onSend: (emailData: ComposeEmailData) => void
+  loading: boolean
+  initialData?: {
+    to?: string[] | string
+    cc?: string[] | string
+    bcc?: string[] | string
+    subject?: string
+    htmlBody?: string
+  }
+  isInline?: boolean
 }
