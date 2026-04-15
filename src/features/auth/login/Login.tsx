@@ -127,7 +127,7 @@ const Login: React.FC<LoginProps> = ({
 
             <div className={styles.redirectLinks}>
               <span>Don't have an account? <a href="/auth/register">Create one</a></span>
-              <span>Forgot your password? <a href="/auth/change_password">Reset it</a></span>
+              <span>Forgot your password? <a href="/auth/change-password">Reset it</a></span>
             </div>
 
             <button disabled={loading}>
@@ -174,7 +174,7 @@ const Login: React.FC<LoginProps> = ({
 
             <div className={styles.redirectLinks}>
               <span>Don't have an account? <a href="/auth/register">Create one</a></span>
-              <span>Forgot your password? <a href="/auth/change_password">Reset it</a></span>
+              <span>Forgot your password? <a href="/auth/change-password">Reset it</a></span>
             </div>
 
             <button disabled={loading}>
