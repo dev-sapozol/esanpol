@@ -16,7 +16,6 @@ type RecoveryProps = {
     emailButton: string
     invalidEmail: string
   }
-  onSuccess: () => void
   onError: (message: string) => void
 }
 
@@ -24,7 +23,6 @@ const Recovery: React.FC<RecoveryProps> = ({
   verifyEmailEndpoint,
   changePasswordEndpoint,
   labels,
-  onSuccess,
   onError,
 }) => {
   const navigate = useNavigate()
@@ -84,7 +82,6 @@ const Recovery: React.FC<RecoveryProps> = ({
       const data = await res.json()
 
       if (data?.success) {
-        onSuccess()
         navigate("/auth/login")
       } else {
         onError(data?.message)

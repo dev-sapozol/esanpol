@@ -49,7 +49,17 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ darkMode, setDarkMode }) => {
         <Route
           path="recovery"
           element={
-            <Recovery {...authConfig} />
+            <Recovery
+              verifyEmailEndpoint={authConfig.verifyEmailEndpoint}
+              changePasswordEndpoint={authConfig.changePasswordEndpoint}
+              labels={{
+                emailPlaceholder: authConfig.labels.emailPlaceholder,
+                passwordPlaceholder: authConfig.labels.passwordPlaceholder,
+                emailButton: authConfig.labels.emailButton,
+                invalidEmail: authConfig.labels.invalidEmail,
+              }}
+              onError={authConfig.onError}
+            />
           }
         />
       </Route>
