@@ -1,7 +1,7 @@
 import { useEffect, useCallback, forwardRef, useImperativeHandle } from "react"
 import { useEditor, EditorContent, type Editor } from "@tiptap/react"
-import { buildExtensions } from "./../../../../tiptap.config"
-import styles from "../components/ComposeModal/ComposeModal.module.css"
+import { buildExtensions } from "../../../../../tiptap.config"
+import styles from "../compose/ComposeModal.module.css"
 
 export interface RichEditorHandle {
   getHTML: () => string
@@ -36,19 +36,11 @@ const RichEditor = forwardRef<RichEditorHandle, RichEditorProps>(
     const editor = useEditor({
       extensions: buildExtensions(placeholder),
       content: initialContent,
-      editorProps: {
-        handleKeyDown: () => false,
+      onCreate({ editor }) {
+        editor.setOptions({ editorProps: { handleKeyDown: handleKeyDown(editor) } })
+        onEditorReady?.(editor) 
       },
     })
-
-    useEffect(() => {
-      if (!editor) return
-      editor.setOptions({
-        editorProps: {
-          handleKeyDown: handleKeyDown(editor),
-        },
-      })
-    }, [editor, handleKeyDown])
 
     useEffect(() => {
       if (!editor) return
@@ -57,7 +49,7 @@ const RichEditor = forwardRef<RichEditorHandle, RichEditorProps>(
         onEditorDestroy?.()
         editor.destroy()
       }
-    }, [editor])
+    }, [editor, onEditorReady, onEditorDestroy])
 
     useImperativeHandle(
       ref,

@@ -4,7 +4,7 @@ import type React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import styles from "./Login.module.css";
-import logo from "../../../assets/LogoSPL.png";
+import logo from "../../../assets/images/LogoSPL.webp";
 
 type LoginProps = {
   verifyEmailEndpoint: string;

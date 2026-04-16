@@ -1,6 +1,6 @@
 "use client"
 
-import styles from "./ComposeModal/ComposeModal.module.css"
+import styles from "../compose/ComposeModal.module.css"
 
 interface AttachmentsListProps {
   attachments: File[]

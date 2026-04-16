@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, type ReactNode } from "react"
-import styles from "./ComposeModal/ComposeModal.module.css"
+import styles from "../compose/ComposeModal.module.css"
 
 const isValidEmail = (email: string): boolean =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)

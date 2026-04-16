@@ -1,35 +1,32 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect, useMemo, lazy, Suspense } from "react"
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import type { MailSection } from "./types"
+import type { MailSection, Mail } from "./types"
 import type { ComposeEmailData } from "./types"
 
 import { useMailbox } from "./hooks/useMailbox"
 import { useCreateEmail } from "./hooks/useCreateEmail"
+import { useInboxSocket } from "./hooks/useInboxSocket"
+import { useSentLimit } from "./hooks/useSentLimit"
 
+import ToastContainer from "../../components/ui/Toats/ToastContainer"
 import styles from "./MailContainer.module.css"
-
-import Sidebar from "../../components/Sidebar/Sidebar"
-import MailNavbar from "./components/mail_navbar/MailNavbar"
-
-const MailList = lazy(() =>
-  import("./components/mail_list/MailList")
-)
-
-const MailDetailModal = lazy(() =>
-  import("./components/mail_detail_modal/MailDetailModal")
-)
-
-const ComposeModal = lazy(() =>
-  import("./components/ComposeModal/ComposeModal")
-)
-
-const SidebarAI = lazy(() =>
-  import("../../components/SidebarAI/SidebarAI")
-)
+import Sidebar from "./components/sidebar/Sidebar"
+import MailNavbar from "./components/navbar/MailNavbar"
+const MailList = lazy(() => import("./components/mail-list/MailList"))
+const MailDetailModal = lazy(() => import("./components/mail-detail/MailDetailModal"))
+const ComposeModal = lazy(() => import("./components/compose/ComposeModal"))
+const SidebarAI = lazy(() => import("./components/sidebar-ai/SidebarAI"))
 
 const FOLDER_MAP: Record<
   MailSection,
@@ -60,9 +57,17 @@ const MailContainer: React.FC<MailContainerProps> = ({
   const [currentSection, setCurrentSection] =
     useState<MailSection>("inbox")
 
-  const [selectedMail, setSelectedMail] = useState<any | null>(null)
-
+  const [selectedMail, setSelectedMail] = useState<Mail | null>(null)
   const [isComposeOpen, setIsComposeOpen] = useState(false)
+
+  // 🔥 REALTIME
+  const [realtimeEmails, setRealtimeEmails] = useState<Mail[]>([])
+
+  type ToastItem =
+    | { id: number; email: Mail }
+    | { id: number; customMessage: string }
+
+  const [toasts, setToasts] = useState<ToastItem[]>([])
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     const saved = localStorage.getItem("mail-sidebar-collapsed")
@@ -75,14 +80,39 @@ const MailContainer: React.FC<MailContainerProps> = ({
   })
 
   const {
+    user,
     getEmailsFor,
+    emailsByFolder,
     loading: mailboxLoading,
     refetch: refetchMailbox,
   } = useMailbox(50)
 
+  const { isLimited, limitMessage } = useSentLimit({
+    role: user?.role,
+    emailsByFolder
+  })
+
   const { createEmail, loading: createEmailLoading } = useCreateEmail()
 
-  // persist sidebar state
+  const handleNewEmail = useCallback((email: Mail) => {
+    setRealtimeEmails((prev) => {
+      if (prev.some((e) => e.id === email.id)) return prev
+      return [email, ...prev]
+    })
+
+    setToasts((prev) => [...prev, { id: email.id, email }])
+  }, [])
+
+  const removeToast = useCallback((id: number) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id))
+  }, [])
+
+  useInboxSocket({
+    userId: user?.id,
+    onNewEmail: handleNewEmail,
+  })
+
+  // persist sidebar
   useEffect(() => {
     localStorage.setItem(
       "mail-sidebar-collapsed",
@@ -97,7 +127,6 @@ const MailContainer: React.FC<MailContainerProps> = ({
     )
   }, [isSidebarAICollapsed])
 
-  // route sync
   useEffect(() => {
     if (location.pathname === "/mail" && !location.hash) {
       navigate("/mail/#inbox", { replace: true })
@@ -114,14 +143,23 @@ const MailContainer: React.FC<MailContainerProps> = ({
 
   const mails = useMemo(() => {
     const folder = FOLDER_MAP[currentSection]
-    return getEmailsFor(folder.folder_type, folder.folder_id)
-  }, [currentSection, getEmailsFor])
+    const folderMails = getEmailsFor(folder.folder_type, folder.folder_id)
 
-  const handleMailSelect = (mail: any) => {
+    if (currentSection !== "inbox") return folderMails
+
+    const existingIds = new Set(folderMails.map((m: Mail) => m.id))
+    const newOnes = realtimeEmails.filter((m) => !existingIds.has(m.id))
+
+    return [...newOnes, ...folderMails]
+  }, [currentSection, getEmailsFor, realtimeEmails])
+
+  const handleMailSelect = (mail: Mail) => {
     setSelectedMail(mail)
   }
 
   const handleComposeEmail = async (emailData: ComposeEmailData) => {
+    if (isLimited) return
+
     try {
       const emailInput = {
         to: emailData.to,
@@ -159,7 +197,19 @@ const MailContainer: React.FC<MailContainerProps> = ({
               setIsSidebarCollapsed((v: boolean) => !v)
             }
             currentSection={currentSection}
-            onCompose={() => setIsComposeOpen(true)}
+            onCompose={() => {
+              if (isLimited) {
+                setToasts((prev) => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    customMessage: limitMessage ?? "Limit reached",
+                  },
+                ])
+                return
+              }
+              setIsComposeOpen(true)
+            }}
           />
         </aside>
 
@@ -178,11 +228,11 @@ const MailContainer: React.FC<MailContainerProps> = ({
           </header>
 
           <div className={styles.mailListContent}>
-              <MailList
-                mails={mails}
-                selectedMailId={selectedMail?.id}
-                onMailSelect={handleMailSelect}
-              />
+            <MailList
+              mails={mails}
+              selectedMailId={selectedMail?.id ?? null}
+              onMailSelect={handleMailSelect}
+            />
           </div>
 
           <footer className={styles.mailListFooter}>
@@ -194,14 +244,14 @@ const MailContainer: React.FC<MailContainerProps> = ({
 
         {/* AI SIDEBAR */}
         <aside className={styles.sidebarAISection}>
-            <SidebarAI
-              isCollapsed={isSidebarAICollapsed}
-              onToggle={() =>
-                setIsSidebarAICollapsed((v: boolean) => !v)
-              }
-              currentSection={currentSection}
-              onCompose={() => setIsComposeOpen(true)}
-            />
+          <SidebarAI
+            isCollapsed={isSidebarAICollapsed}
+            onToggle={() =>
+              setIsSidebarAICollapsed((v: boolean) => !v)
+            }
+            currentSection={currentSection}
+            onCompose={() => setIsComposeOpen(true)}
+          />
         </aside>
       </div>
 
@@ -214,6 +264,13 @@ const MailContainer: React.FC<MailContainerProps> = ({
             onEmailSent={() => {
               refetchMailbox()
             }}
+            islimited={isLimited}
+            onLimitReached={() =>
+              setToasts((prev) => [
+                ...prev,
+                { id: Date.now(), customMessage: limitMessage ?? "Limit reached" },
+              ])
+            }
           />
         </Suspense>
       )}
@@ -225,8 +282,12 @@ const MailContainer: React.FC<MailContainerProps> = ({
           onClose={() => setIsComposeOpen(false)}
           onSend={handleComposeEmail}
           loading={createEmailLoading}
+          disabled={isLimited}
         />
       </Suspense>
+
+      {/* 🔥 TOASTS */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   )
 }

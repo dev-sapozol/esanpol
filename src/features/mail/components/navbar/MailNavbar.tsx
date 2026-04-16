@@ -2,10 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import styles from "./MailNavbar.module.css"
-import logo from "../../../../assets/LogoSPL.png"
+import logo from "../../../../assets/images/LogoSPL.webp"
 import { useMailbox } from "../../hooks/useMailbox"
 import { useApolloClient } from "@apollo/client"
-import MailAddModal from "../MailAddModal/MailAddModal"
+import MailAddModal from "../mail-add-modal/MailAddModal"
 
 interface NavbarProps {
   darkMode: boolean

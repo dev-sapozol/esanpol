@@ -4,9 +4,9 @@ import type React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
 import { getData, getCode } from "country-list"
-import CustomSelect from "../../../components/CustomSelect/CustomSelect"
+import CustomSelect from "../../../components/ui/CustomSelect/CustomSelect"
 import styles from "./Register.module.css"
-import logo from "../../../assets/LogoSPL.png";
+import logo from "../../../assets/images/LogoSPL.webp";
 
 type RegisterProps = {
   verifyEmailEndpoint: string
@@ -28,6 +28,7 @@ type RegisterProps = {
     validEmail: string
     back: string
   }
+  accessCode: string
   onSuccess: (token: string) => void
   onError: (message: string) => void
 }
@@ -36,10 +37,11 @@ const Register: React.FC<RegisterProps> = ({
   verifyEmailEndpoint,
   registerEndpoint,
   labels,
+  accessCode,
   onSuccess,
   onError,
 }) => {
-  const [step, setStep] = useState<"email" | "password" | "register">("email")
+  const [step, setStep] = useState<"email" | "password" | "register" | "code">("email")
   const [emailPrefix, setEmailPrefix] = useState("")
   const [emailError, setEmailError] = useState<"exists" | "invalid" | null>(null)
   const email = emailPrefix.trim() + "@esanpol.xyz"
@@ -51,8 +53,11 @@ const Register: React.FC<RegisterProps> = ({
     country: "",
     birthdate: "",
     cellphone: "",
-    gender: ""
+    gender: "",
+    recovery_email: ""
   })
+  const [codeInput, setCodeInput] = useState("")
+  const [codeError, setCodeError] = useState(false)
   const [loading, setLoading] = useState(false)
   const countries = getData()
   const [country, setCountry] = useState("")
@@ -99,10 +104,17 @@ const Register: React.FC<RegisterProps> = ({
 
     if (password.length < 8) {
       onError("Password must be at least 8 characters.")
-      setLoading(false)
       return
     }
+    setStep("code")
+  }
 
+  const handleCodeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (codeInput !== accessCode) {
+      setCodeError(true)
+      return
+    }
     setLoading(true)
 
     const birth = new Date(registerData.birthdate)
@@ -335,6 +347,18 @@ const Register: React.FC<RegisterProps> = ({
               required
             />
 
+            <div className={styles.field}>
+              <input
+                type="email"
+                placeholder=" "
+                value={registerData.recovery_email}
+                onChange={(e) =>
+                  setRegisterData({ ...registerData, recovery_email: e.target.value })
+                }
+              />
+              <label>Recovery email (Gmail, Outlook…)</label>
+            </div>
+
             <button disabled={loading}>{labels.registerButton}</button>
           </motion.form>
         )}
@@ -374,6 +398,53 @@ const Register: React.FC<RegisterProps> = ({
             </div>
 
             <button disabled={loading}>{labels.passwordButton}</button>
+          </motion.form>
+        )}
+
+        {step === "code" && (
+          <motion.form
+            key="code"
+            {...slide}
+            onSubmit={handleCodeSubmit}
+            className={styles.form}
+          >
+            <div className={styles.backArrow} onClick={() => { setStep("password"); setCodeError(false) }}>
+              ←
+            </div>
+
+            <div className={styles.logoRow}>
+              <img className={styles.logo} src={logo} alt="Logo SPL" />
+              <h2>Esanpol</h2>
+            </div>
+
+            <div className={styles.emailRow}>
+              <h3>Access code</h3>
+              <p>Enter the code provided by your administrator</p>
+            </div>
+
+            <div className={styles.field}>
+              <input
+                type="password"
+                placeholder=" "
+                maxLength={6}
+                value={codeInput}
+                onChange={(e) => {
+                  setCodeInput(e.target.value.replace(/\D/g, ""))
+                  setCodeError(false)
+                }}
+                required
+              />
+              <label>Access code</label>
+            </div>
+
+            {codeError && (
+              <div className={styles.alertError}>
+                <span>⚠</span>
+                <p>Invalid access code.</p>
+              </div>
+            )}
+
+            <button disabled={loading || codeInput.length < 6}>{labels.registerButton}</button>
           </motion.form>
         )}
 

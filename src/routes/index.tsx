@@ -24,62 +24,67 @@ const Recovery = lazy(() => import("../features/auth/recovery/Recovery"));
 
 const AppRoutes: React.FC<AppRoutesProps> = ({ darkMode, setDarkMode }) => {
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route
-        path="/auth"
-        element={
-          <AuthPage />
-        }
-      >
+    <Suspense>
+      <Routes>
+        {/* Public routes */}
         <Route
-          path="login"
+          path="/auth"
           element={
-            <Login {...authConfig} />
+            <AuthPage />
+          }
+        >
+          <Route
+            path="login"
+            element={
+              <Login {...authConfig} />
+            }
+          />
+
+          <Route
+            path="register"
+            element={
+              <Register 
+              accessCode={import.meta.env.VITE_REGISTER_CODE}
+              {...authConfig} />
+            }
+          />
+
+          <Route
+            path="change-password"
+            element={
+              <Recovery
+                requestPasswordResetEndpoint={authConfig.requestPasswordResetEndpoint}
+                verifyResetOtpEndpoint={authConfig.verifyResetOtpEndpoint}
+                resetPasswordEndpoint={authConfig.resetPasswordEndpoint}
+                labels={{
+                  emailPlaceholder: authConfig.labels.emailPlaceholder,
+                  passwordPlaceholder: authConfig.labels.passwordPlaceholder,
+                  emailButton: authConfig.labels.emailButton,
+                  invalidEmail: authConfig.labels.invalidEmail,
+                }}
+                onError={authConfig.onError}
+              />
+            }
+          />
+        </Route>
+
+        {/* Private routes */}
+        <Route
+          path="/mail/*"
+          element={
+            <PrivateRoute>
+              <MailContainer darkMode={darkMode} setDarkMode={setDarkMode} />
+            </PrivateRoute>
           }
         />
 
-        <Route
-          path="register"
-          element={
-            <Register {...authConfig} />
-          }
-        />
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to="/mail" replace />} />
 
-        <Route
-          path="change-password"
-          element={
-            <Recovery
-              verifyEmailEndpoint={authConfig.verifyEmailEndpoint}
-              changePasswordEndpoint={authConfig.changePasswordEndpoint}
-              labels={{
-                emailPlaceholder: authConfig.labels.emailPlaceholder,
-                passwordPlaceholder: authConfig.labels.passwordPlaceholder,
-                emailButton: authConfig.labels.emailButton,
-                invalidEmail: authConfig.labels.invalidEmail,
-              }}
-              onError={authConfig.onError}
-            />
-          }
-        />
-      </Route>
-
-      {/* Private routes */}
-      <Route
-        path="/mail/*"
-        element={
-          <PrivateRoute>
-            <MailContainer darkMode={darkMode} setDarkMode={setDarkMode} />
-          </PrivateRoute>
-        }
-      />
-
-      {/* Default redirect */}
-      <Route path="/" element={<Navigate to="/mail" replace />} />
-
-      {/* Not found */}
-      <Route path="*" element={<div>Page not found</div>} />
-    </Routes>
+        {/* Not found */}
+        <Route path="*" element={<div>Page not found</div>} />
+      </Routes>
+    </Suspense>
   );
 };
 

@@ -3,6 +3,9 @@ export const authConfig = {
   verifyEmailEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/verify-email`,
   loginEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/login`,
   registerEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/register`,
+  requestPasswordResetEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/request-password-reset`,
+  verifyResetOtpEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/verify-reset-otp`,
+  resetPasswordEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/reset-password`,
   changePasswordEndpoint: `${import.meta.env.VITE_API_URL}/api/auth/change-password`,
   labels: {
     emailPlaceholder: "Email",

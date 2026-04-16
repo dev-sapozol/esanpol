@@ -16,6 +16,7 @@ const preloadMailbox = gql`
         name
         email
         avatar_url
+        role
       }
       system_folders {
         id

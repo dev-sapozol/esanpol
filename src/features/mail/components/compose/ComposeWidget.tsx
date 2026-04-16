@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import type { ComposeEmailData } from "../../features/mail/types"
+import type { ComposeEmailData } from "../../types"
 import styles from "./ComposeWidget.module.css"
 
 interface ComposeWidgetProps {

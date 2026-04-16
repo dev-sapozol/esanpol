@@ -44,4 +44,5 @@ export interface ComposeModalProps {
     htmlBody?: string
   }
   isInline?: boolean
+  disabled?: boolean
 }

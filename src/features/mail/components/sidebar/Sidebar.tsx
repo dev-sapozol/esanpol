@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import type { MailSection } from "../../features/mail/types"
+import type { MailSection } from "../../types"
 import styles from "./Sidebar.module.css"
 
 interface SidebarProps {

@@ -11,15 +11,15 @@ import {
 } from "react"
 import type { Editor } from "@tiptap/core"
 
-import { RecipientField } from "./../../components/RecipientField"
-import { AttachmentsList } from "./../../components/AttachmentsList"
-import { EditorToolbar } from "./../../components/EditorToolbar"
+import { RecipientField } from "./RecipientField"
+import { AttachmentsList } from "./AttachmentsList"
+import { EditorToolbar } from "./EditorToolbar"
 import type { ComposeModalProps } from "../../types"
-import type { RichEditorHandle } from "./../../editor/RichEditor"
+import type { RichEditorHandle } from "./RichEditor"
 
-import styles from "./ComposeModal.module.css"
+import styles from "../compose/ComposeModal.module.css"
 
-const RichEditor = lazy(() => import("./../../editor/RichEditor"))
+const RichEditor = lazy(() => import("./RichEditor"))
 
 const normalizeEmails = (value?: string[] | string): string[] => {
   if (!value) return []
@@ -34,6 +34,7 @@ export default function ComposeModal({
   loading,
   initialData,
   isInline,
+  disabled,
 }: ComposeModalProps) {
   // ── Estado de destinatarios ──
   const [toList, setToList] = useState<string[]>([])
@@ -64,6 +65,11 @@ export default function ComposeModal({
   }, [isOpen, hasShownToast])
 
   useEffect(() => {
+    if (!activeEditor || !initialData?.htmlBody) return
+    activeEditor.commands.setContent(initialData.htmlBody)
+  }, [activeEditor, initialData])
+
+  useEffect(() => {
     if (!isOpen || !initialData) return
 
     setToList(normalizeEmails(initialData.to))
@@ -75,13 +81,6 @@ export default function ComposeModal({
     if (bcc.length) { setBccList(bcc); setShowBcc(true) }
 
     if (initialData.subject) setSubject(initialData.subject)
-
-    if (initialData.htmlBody) {
-      const id = setTimeout(() => {
-        editorRef.current?.setContent(initialData.htmlBody!)
-      }, 50)
-      return () => clearTimeout(id)
-    }
   }, [isOpen, initialData])
 
   // ── Handlers ──
@@ -117,6 +116,8 @@ export default function ComposeModal({
     })
   }, [toList, ccList, bccList, subject, onSend])
 
+    const handleEditorDestroy = useCallback(() => setActiveEditor(null), [])
+
   if (!isOpen) return null
 
   const canSend = toList.length > 0 || ccList.length > 0 || bccList.length > 0
@@ -125,6 +126,7 @@ export default function ComposeModal({
   const containerClass = isInline
     ? styles.inlineContainer
     : `${styles.modal} ${isFull ? styles.fullscreen : ""}`
+
 
   return (
     <>
@@ -207,7 +209,7 @@ export default function ComposeModal({
               ref={editorRef}
               isInline={isInline}
               onEditorReady={setActiveEditor}
-              onEditorDestroy={() => setActiveEditor(null)}
+              onEditorDestroy={handleEditorDestroy}
             />
           </Suspense>
 
@@ -223,7 +225,7 @@ export default function ComposeModal({
               <button
                 className={styles.sendBtn}
                 onClick={handleSend}
-                disabled={loading || !canSend}
+                disabled={loading || !canSend || disabled}
               >
                 {loading ? "Enviando…" : "Enviar"}
               </button>

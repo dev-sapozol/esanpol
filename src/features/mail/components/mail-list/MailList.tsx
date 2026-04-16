@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import MailItem from "../mail_item/MailItem"
+import MailItem from "../mail-item/MailItem"
 import type { Mail } from "../../types"
 import styles from "./MailList.module.css"
 

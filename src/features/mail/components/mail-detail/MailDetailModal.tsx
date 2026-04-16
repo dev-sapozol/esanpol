@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import { useGetEmail } from "../../hooks/useGetEmail"
 import { useReplyEmail } from "../../hooks/useReplyEmail"
-import ComposeModal from "../ComposeModal/ComposeModal"
+import ComposeModal from "../compose/ComposeModal"
 import styles from "./MailDetailModal.module.css"
 import { ComposeEmailData } from "../../types"
 
@@ -11,6 +11,8 @@ interface MailDetailModalProps {
   mailId: number
   onClose: () => void
   onEmailSent?: () => void
+  islimited?: boolean
+  onLimitReached?: () => void
 }
 
 const getInitials = (name?: string) => {
@@ -27,7 +29,7 @@ const formatDateDetail = (dateString: string) => {
   })
 }
 
-const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEmailSent }) => {
+const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEmailSent, islimited: isLimited, onLimitReached }) => {
   const { mail, loading, error } = useGetEmail(mailId)
 
   const { replyEmail, loading: mutationLoading } = useReplyEmail()
@@ -37,6 +39,8 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
   const [sendingReply, setSendingReply] = useState(false)
 
   const replyRef = useRef<HTMLDivElement>(null)
+
+  const [limitToast, setLimitToast] = useState(false)
 
   useEffect(() => {
     if (isReplying && replyRef.current) {
@@ -51,6 +55,11 @@ const MailDetailModal: React.FC<MailDetailModalProps> = ({ mailId, onClose, onEm
   const safeDate = mail.inserted_at ?? ""
 
   const handleReply = () => {
+    if (isLimited) {
+      onLimitReached?.()
+      return
+    }
+
     const originalDate = formatDateDetail(safeDate)
     const sender = mail.senderName || mail.senderEmail
 

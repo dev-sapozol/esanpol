@@ -1,7 +1,7 @@
 "use client"
 
 import type { Editor } from "@tiptap/core"
-import styles from "../components/ComposeModal/ComposeModal.module.css"
+import styles from "../compose/ComposeModal.module.css"
 
 interface EditorToolbarProps {
   editor: Editor | null
