@@ -1,0 +1,124 @@
+/* ===================== ABOUT ===================== */
+
+.about {
+  background: #f5f0e8;
+  color: #1a1610;
+  padding: clamp(5rem, 10vh, 9rem) clamp(1.5rem, 6vw, 5rem);
+}
+
+.aboutGrid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4rem;
+  margin-bottom: 5rem;
+  flex-wrap: wrap;
+}
+
+.aboutHeadline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4.5rem, 11vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+.aboutHeadlineAccent {
+  color: #ff6b35;
+}
+
+.aboutContent {
+  flex: 1;
+  min-width: 280px;
+  max-width: 520px;
+}
+
+.aboutText {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  line-height: 1.85;
+  color: rgba(26, 22, 16, 0.72);
+  margin-bottom: 1.4rem;
+}
+
+.aboutText:last-of-type {
+  margin-bottom: 2rem;
+}
+
+.aboutLinks {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.aboutLink {
+  padding: 0.5rem 1.25rem;
+  border: 1.5px solid rgba(26, 22, 16, 0.18);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  border-radius: 100px;
+  color: rgba(26, 22, 16, 0.5);
+  transition: all 0.2s;
+}
+
+.aboutLink:hover {
+  border-color: #ff6b35;
+  color: #ff6b35;
+}
+
+/* ===================== TECH STACK ===================== */
+
+.techStack {
+  border-top: 1.5px solid rgba(26, 22, 16, 0.1);
+  padding-top: 3rem;
+}
+
+.techStackLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(26, 22, 16, 0.35);
+  margin-bottom: 2rem;
+}
+
+.techCategories {
+  display: flex;
+  gap: 3.5rem;
+  flex-wrap: wrap;
+}
+
+.techCategory {
+  display: flex;
+  flex-direction: column;
+}
+
+.techCategoryName {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ff6b35;
+  margin-bottom: 0.75rem;
+}
+
+.techList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.techItem {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(26, 22, 16, 0.65);
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 768px) {
+  .aboutGrid {
+    flex-direction: column;
+  }
+}

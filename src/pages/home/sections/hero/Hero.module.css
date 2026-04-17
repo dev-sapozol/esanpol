@@ -1,0 +1,125 @@
+/* ===================== HERO ===================== */
+
+.hero {
+  background: #0d0f14;
+  color: #e8e4d8;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 clamp(1.5rem, 6vw, 5rem) clamp(3.5rem, 8vh, 5.5rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(18vw, 24vw, 28vw);
+  color: rgba(232, 255, 71, 0.03);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  user-select: none;
+}
+
+.heroAvailable {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #e8ff47;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.heroAvailableLine {
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: #e8ff47;
+}
+
+.heroTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 14vw, 13rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.8rem;
+}
+
+.heroTitleAccent {
+  color: #e8ff47;
+}
+
+.heroBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  border-top: 1px solid rgba(232, 228, 216, 0.1);
+  padding-top: 1.5rem;
+}
+
+.heroDescription {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.75rem, 1.5vw, 0.88rem);
+  color: rgba(232, 228, 216, 0.45);
+  max-width: 440px;
+  line-height: 1.8;
+}
+
+.heroActions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btnPrimary {
+  padding: 0.75rem 2rem;
+  background: #e8ff47;
+  color: #000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  border-radius: 1px;
+  font-weight: 500;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btnPrimary:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.btnSecondary {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(232, 228, 216, 0.2);
+  color: rgba(232, 228, 216, 0.5);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  border-radius: 1px;
+  transition: all 0.2s;
+}
+
+.btnSecondary:hover {
+  border-color: #e8e4d8;
+  color: #e8e4d8;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 768px) {
+  .heroBottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

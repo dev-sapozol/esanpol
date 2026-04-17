@@ -1,0 +1,129 @@
+/* ===================== EXPERIENCE ===================== */
+
+.experience {
+  background: #1a1a2e;
+  color: #dcd8f0;
+  padding: clamp(5rem, 10vh, 9rem) clamp(1.5rem, 6vw, 5rem);
+}
+
+.experienceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.experienceTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+.experienceTitleAccent {
+  color: #7eb3ff;
+}
+
+.experienceCount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 8vw, 6rem);
+  color: rgba(220, 216, 240, 0.07);
+  align-self: flex-end;
+  line-height: 1;
+}
+
+.expItem {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 3rem;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid rgba(220, 216, 240, 0.08);
+}
+
+.expItem:first-of-type {
+  border-top: 1px solid rgba(220, 216, 240, 0.08);
+}
+
+.expMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.expPeriod {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #7eb3ff;
+  letter-spacing: 0.06em;
+}
+
+.expCompany {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(220, 216, 240, 0.5);
+  line-height: 1.4;
+  font-family: 'Outfit', sans-serif;
+}
+
+.expBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.expRole {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.expDescList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.expDescItem {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: rgba(220, 216, 240, 0.5);
+  line-height: 1.65;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.expDescArrow {
+  position: absolute;
+  left: 0;
+  color: #7eb3ff;
+  font-size: 0.7rem;
+}
+
+.expTech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.expTechTag {
+  padding: 0.22rem 0.7rem;
+  border: 1px solid rgba(126, 179, 255, 0.22);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.63rem;
+  color: rgba(220, 216, 240, 0.4);
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 768px) {
+  .expItem {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}

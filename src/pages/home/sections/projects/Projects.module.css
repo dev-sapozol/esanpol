@@ -1,0 +1,189 @@
+/* ===================== PROJECTS ===================== */
+
+.projects {
+  background: #f0ece3;
+  color: #1a1610;
+  padding: clamp(5rem, 10vh, 9rem) clamp(1.5rem, 6vw, 5rem);
+}
+
+.projectsTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  margin-bottom: 3.5rem;
+}
+
+.projectsTitleAccent {
+  color: #ff6b35;
+}
+
+.projectsList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.projectRow {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 2rem;
+  align-items: start;
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(26, 22, 16, 0.08);
+  background: rgba(26, 22, 16, 0.03);
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.projectRow:hover {
+  background: rgba(255, 107, 53, 0.04);
+  border-color: rgba(255, 107, 53, 0.2);
+  transform: translateX(5px);
+}
+
+.projectAccent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #ff6b35;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s;
+}
+
+.projectRow:hover .projectAccent {
+  transform: scaleY(1);
+}
+
+.projectFeatured {
+  position: absolute;
+  top: 0.9rem;
+  right: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ff6b35;
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  padding: 0.12rem 0.5rem;
+  border-radius: 100px;
+}
+
+.projectIndex {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: rgba(26, 22, 16, 0.1);
+  line-height: 1;
+  padding-top: 2px;
+}
+
+.projectInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.projectHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.projectHeader img {
+  padding-bottom: 14px;
+}
+
+.projectLogo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.projectName {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.projectDescription {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: rgba(26, 22, 16, 0.52);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  max-width: 520px;
+}
+
+.projectTech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.projectTechTag {
+  padding: 0.2rem 0.65rem;
+  background: rgba(26, 22, 16, 0.06);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: rgba(26, 22, 16, 0.45);
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+
+.projLinksCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.projectLinkGhost {
+  padding: 0.45rem 1rem;
+  border: 1px solid rgba(26, 22, 16, 0.15);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: rgba(26, 22, 16, 0.45);
+  border-radius: 1px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.projectLinkGhost:hover {
+  border-color: #ff6b35;
+  color: #ff6b35;
+}
+
+.projectLinkSolid {
+  padding: 0.45rem 1rem;
+  background: #ff6b35;
+  border: 1px solid #ff6b35;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: #fff;
+  border-radius: 1px;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.projectLinkSolid:hover {
+  opacity: 0.85;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 768px) {
+  .projectRow {
+    grid-template-columns: 60px 1fr;
+  }
+
+  .projLinksCol {
+    display: none;
+  }
+}

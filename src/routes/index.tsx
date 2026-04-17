@@ -20,19 +20,31 @@ const AuthPage = lazy(() => import("../features/auth/AuthPage"));
 const Login = lazy(() => import("../features/auth/login/Login"));
 const Register = lazy(() => import("../features/auth/register/Register"));
 const Recovery = lazy(() => import("../features/auth/recovery/Recovery"));
+const Home = lazy(() => import("../pages/home/Home"));
 
 
 const AppRoutes: React.FC<AppRoutesProps> = ({ darkMode, setDarkMode }) => {
+  const isAuth = !!localStorage.getItem("token");
   return (
     <Suspense>
       <Routes>
         {/* Public routes */}
+
+        <Route
+          path="/"
+          element={
+            isAuth ? <Navigate to="/mail" replace /> : <Home />
+          }
+        />
+
         <Route
           path="/auth"
           element={
             <AuthPage />
           }
         >
+
+          <Route index element={<Navigate to="login" replace />} />
           <Route
             path="login"
             element={
@@ -43,9 +55,9 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ darkMode, setDarkMode }) => {
           <Route
             path="register"
             element={
-              <Register 
-              accessCode={import.meta.env.VITE_REGISTER_CODE}
-              {...authConfig} />
+              <Register
+                accessCode={import.meta.env.VITE_REGISTER_CODE}
+                {...authConfig} />
             }
           />
 
@@ -78,11 +90,8 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ darkMode, setDarkMode }) => {
           }
         />
 
-        {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/mail" replace />} />
-
         {/* Not found */}
-        <Route path="*" element={<div>Page not found</div>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
   );

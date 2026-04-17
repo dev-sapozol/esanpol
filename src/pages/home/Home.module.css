@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+/* ===================== RESET & BASE ===================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #e8ff47;
+  color: #000;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ===================== KEYFRAMES ===================== */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ===================== NAV ===================== */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.4s, backdrop-filter 0.4s;
+}
+
+.nav.scrolled {
+  background: rgba(13, 15, 20, 0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(232, 255, 71, 0.1);
+}
+
+.navLogo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.7rem;
+  color: #e8ff47;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.navLinks {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.navLinks a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(232, 228, 216, 0.45);
+  transition: color 0.2s;
+}
+
+.navLinks a.active,
+.navLinks a:hover {
+  color: #e8ff47;
+}
+
+.navCta {
+  padding: 0.4rem 1.2rem;
+  background: transparent;
+  border: 1px solid #e8ff47;
+  color: #e8ff47;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 1px;
+}
+
+.navCta:hover {
+  background: #e8ff47;
+  color: #000;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: #e8ff47;
+  transition: all 0.3s;
+}
+
+/* ===================== MARQUEE ===================== */
+
+.marqueeStrip {
+  background: #e8ff47;
+  padding: 0.65rem 0;
+  overflow: hidden;
+}
+
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+}
+
+.marqueeItem {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 0 0.5rem;
+}
+
+.marqueeDot {
+  margin: 0 0.8rem;
+  opacity: 0.35;
+}
+
+/* ===================== FOOTER ===================== */
+
+.footer {
+  background: #0f1923;
+  border-top: 1px solid rgba(216, 232, 224, 0.07);
+  padding: 1.5rem clamp(1.5rem, 6vw, 5rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(216, 232, 224, 0.22);
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 768px) {
+  .navLinks {
+    display: none;
+  }
+
+  .navLinks.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 60px 0 0 0;
+    background: rgba(13, 15, 20, 0.97);
+    padding: 3rem 2rem;
+    gap: 2rem;
+    z-index: 499;
+    align-items: flex-start;
+    backdrop-filter: blur(20px);
+  }
+
+  .navLinks.open a {
+    font-size: 1rem;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}

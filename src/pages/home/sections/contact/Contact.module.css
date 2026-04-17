@@ -1,0 +1,89 @@
+/* ===================== CONTACT ===================== */
+
+.contact {
+  background: #0f1923;
+  color: #d8e8e0;
+  padding: clamp(5rem, 12vh, 10rem) clamp(1.5rem, 6vw, 5rem);
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contactLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #e8ff47;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.contactLabelLine {
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: #e8ff47;
+}
+
+.contactTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 12vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+}
+
+.contactTitleAccent {
+  color: #e8ff47;
+}
+
+.contactActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.contactBtnPrimary {
+  padding: 0.9rem 2.5rem;
+  background: #e8ff47;
+  color: #000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  border-radius: 1px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.contactBtnPrimary:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.contactBtnGhost {
+  padding: 0.9rem 1.8rem;
+  border: 1px solid rgba(216, 232, 224, 0.2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: rgba(216, 232, 224, 0.45);
+  border-radius: 1px;
+  letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+
+.contactBtnGhost:hover {
+  border-color: #d8e8e0;
+  color: #d8e8e0;
+}
+
+.contactEmail {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  color: rgba(216, 232, 224, 0.2);
+  letter-spacing: 0.04em;
+}
