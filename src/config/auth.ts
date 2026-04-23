@@ -24,6 +24,7 @@ export const authConfig = {
     genderPlaceholder: "Gender",
     registerButton: "Register",
     validEmail: "Email already exists",
+    verifyEmail: "Verify email",
   },
   onSuccess: (token: string) => console.log("Logged in", token),
   onError: (msg: string) => console.error(msg),
