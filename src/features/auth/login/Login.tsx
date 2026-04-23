@@ -3,6 +3,8 @@
 import type React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useBackendWarmup } from "../hooks/useBackendWarmup";
+import { BackendWarmup } from "../../../components/ui/BackendWarmup/BackendWarmup";
 import styles from "./Login.module.css";
 import logo from "../../../assets/images/LogoSPL.webp";
 
@@ -33,10 +35,12 @@ const Login: React.FC<LoginProps> = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { warmingUp, start, stop } = useBackendWarmup(4000);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    start();
 
     try {
       const res = await fetch(verifyEmailEndpoint, {
@@ -56,6 +60,7 @@ const Login: React.FC<LoginProps> = ({
       onError(err.message);
     }
 
+    stop();
     setLoading(false);
   };
 
@@ -94,6 +99,7 @@ const Login: React.FC<LoginProps> = ({
 
   return (
     <div className={styles.login}>
+      <BackendWarmup visible={warmingUp} />
       <AnimatePresence mode="wait">
 
         {step === "email" && (

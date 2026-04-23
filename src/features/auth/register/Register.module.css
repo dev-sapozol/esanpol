@@ -299,3 +299,14 @@
 .redirectLinks a:hover {
   text-decoration: underline;
 }
+
+.recoveryNote {
+  font-size: 0.78rem;
+  color: var(--text-muted, #888);
+  line-height: 1.5;
+  margin-top: -0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--info-bg, #f0f4ff);
+  border-left: 3px solid var(--info-border, #4a90e2);
+  border-radius: 0 4px 4px 0;
+}

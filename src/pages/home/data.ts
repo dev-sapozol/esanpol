@@ -34,16 +34,16 @@ export const projects = [
     id: 1,
     name: "SPL",
     description:
-      "Email client built with Phoenix, React, AWS SES/SQS and WebSockets.",
+      "Email client built with Phoenix, AWS SES/SQS, Redis Cache, GraphQL, R2 and WebSockets.",
     tech: [
       "Elixir",
       "Phoenix",
       "AWS [SES, SQS, SNS]",
-      "Redis",
+      "Redis Cache",
       "GraphQL",
       "WebSockets",
       "Cloudflare R2",
-      "MySQL",
+      "PostgreSQL",
     ],
     github: "https://github.com/dev-sapozol/spl",
     featured: true,
@@ -56,14 +56,15 @@ export const projects = [
     tech: ["React", "Vite", "GraphQL", "WebSockets", "Module CSS"],
     github: "https://github.com/dev-sapozol/esanpol",
     live: `${import.meta.env.VITE_URL_MAIL}/auth/`,
+    code: `${import.meta.env.VITE_REGISTER_CODE}`,
     featured: true,
   },
 ];
 
 export const technologies = {
-  Languages: ["Elixir", "Python", "Java"],
-  Frameworks: ["Phoenix", "React"],
-  Databases: ["MySQL", "Redis"],
+  Languages: ["Elixir", "Python", "Java", "Typescript"],
+  Frameworks: ["Phoenix", "Vite"],
+  Databases: ["MySQL", "Redis", "PostgreSQL", "Oracle"],
   Cloud: ["AWS SES", "AWS SQS", "AWS SNS", "Cloudflare R2"],
-  Other: ["Vite", "WebSockets", "Module CSS"],
+  Other: ["React", "WebSockets", "Module CSS", "GraphQL"],
 };

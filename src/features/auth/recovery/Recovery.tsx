@@ -4,6 +4,8 @@ import type React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { useBackendWarmup } from "../hooks/useBackendWarmup";
+import { BackendWarmup } from "../../../components/ui/BackendWarmup/BackendWarmup";
 import styles from "./Recovery.module.css"
 import logo from "../../../assets/images/LogoSPL.webp"
 
@@ -37,6 +39,7 @@ const Recovery: React.FC<RecoveryProps> = ({
   const [loading, setLoading] = useState(false)
   const [emailPrefix, setEmailPrefix] = useState("")
   const email = emailPrefix.trim() + "@esanpol.xyz"
+  const { warmingUp, start, stop } = useBackendWarmup(4000);
 
   useEffect(() => {
     if (resendCooldown <= 0) return
@@ -46,6 +49,7 @@ const Recovery: React.FC<RecoveryProps> = ({
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    start();
     setLoading(true)
     try {
       await fetch(requestPasswordResetEndpoint, {
@@ -56,6 +60,7 @@ const Recovery: React.FC<RecoveryProps> = ({
       setStep("otp")
       setResendCooldown(60)
     } catch (err: any) { onError(err.message) }
+    stop();
     setLoading(false)
   }
 
@@ -117,6 +122,7 @@ const Recovery: React.FC<RecoveryProps> = ({
 
   return (
     <div className={styles.recovery}>
+      <BackendWarmup visible={warmingUp} />
       <AnimatePresence mode="wait">
 
         {step === "email" && (

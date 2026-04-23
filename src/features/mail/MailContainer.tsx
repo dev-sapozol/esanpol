@@ -62,6 +62,7 @@ const MailContainer: React.FC<MailContainerProps> = ({
 
   // 🔥 REALTIME
   const [realtimeEmails, setRealtimeEmails] = useState<Mail[]>([])
+  const [composeDraft, setComposeDraft] = useState<{ subject: string; body: string } | null>(null)
 
   type ToastItem =
     | { id: number; email: Mail }
@@ -243,14 +244,18 @@ const MailContainer: React.FC<MailContainerProps> = ({
         </main>
 
         {/* AI SIDEBAR */}
-        <aside className={styles.sidebarAISection}>
+        <aside className={`${styles.sidebarAISection} ${isSidebarAICollapsed ? styles.collapsed : ""}`}>
           <SidebarAI
             isCollapsed={isSidebarAICollapsed}
             onToggle={() =>
               setIsSidebarAICollapsed((v: boolean) => !v)
             }
             currentSection={currentSection}
-            onCompose={() => setIsComposeOpen(true)}
+            onCompose={(draft) => {
+              setComposeDraft(draft)
+              setIsComposeOpen(true)
+            }}
+            aiMessagesRemaining={user?.ai_messages_remaining ?? 0}
           />
         </aside>
       </div>
@@ -279,10 +284,14 @@ const MailContainer: React.FC<MailContainerProps> = ({
       <Suspense fallback={null}>
         <ComposeModal
           isOpen={isComposeOpen}
-          onClose={() => setIsComposeOpen(false)}
+          onClose={() => { setIsComposeOpen(false); setComposeDraft(null) }}
           onSend={handleComposeEmail}
           loading={createEmailLoading}
           disabled={isLimited}
+          initialData={composeDraft ? {
+            subject: composeDraft.subject,
+            htmlBody: composeDraft.body,
+          } : undefined}
         />
       </Suspense>
 

@@ -2,8 +2,14 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  max-height: 100%;
   background: var(--surface-secondary);
   color: var(--text);
+  min-width: 0;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .sidebarAIHeader {
@@ -12,6 +18,7 @@
   gap: 8px;
   padding: 10px 12px;
   border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .sidebarAIHeader button {
@@ -25,48 +32,140 @@
   color: var(--text);
 }
 
+.expandedContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .chatContainer {
   flex: 1;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   background: var(--surface-secondary);
+  box-sizing: border-box;
+}
+
+.userRow {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  min-width: 0;
+}
+
+.aiRow {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
 }
 
 .userMessage {
-  align-self: flex-end;
-  background: var(--user-msg);
-  color: #1e3a8a;
+  background: #0067b8;
+  color: #fff;
   padding: 8px 12px;
   border-radius: 12px 12px 4px 12px;
-  max-width: 80%;
   font-size: 13px;
   line-height: 1.4;
+  max-width: 80%;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  box-sizing: border-box;
 }
 
 .aiMessage {
-  align-self: flex-start;
   background: var(--ai-msg);
   color: var(--text);
   padding: 8px 12px;
   border-radius: 12px 12px 12px 4px;
-  max-width: 80%;
   font-size: 13px;
   line-height: 1.4;
+  max-width: 80%;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  box-sizing: border-box;
 }
 
-.userMessage {
-  align-self: flex-end;
-  background: var(--user-msg);
-  color: var(--text);
-  padding: 8px 12px;
-  border-radius: 12px 12px 4px 12px;
-  max-width: 80%;
-  font-size: 13px;
-  line-height: 1.4;
+/* ── Draft card — vive dentro de .aiMessage ─────────────────────────── */
+
+.draftCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  width: 100%;
 }
+
+.draftLabel {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.draftField {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.draftFieldLabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+}
+
+.draftSubject {
+  font-size: 13px;
+  font-weight: 500;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.draftBody {
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  opacity: 0.85;
+}
+
+.useDraftBtn {
+  margin-top: 4px;
+  padding: 5px 10px;
+  background: #0067b8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.useDraftBtn:hover {
+  background: #005da6;
+}
+
+/* ── Input area ──────────────────────────────────────────────────────── */
 
 .inputContainer {
   display: flex;
@@ -74,10 +173,12 @@
   border-top: 1px solid var(--surface);
   padding: 8px;
   background: var(--surface);
+  flex-shrink: 0;
 }
 
 .input {
   flex: 1;
+  min-width: 0;
   border: none;
   outline: none;
   padding: 8px;
@@ -91,9 +192,81 @@
 }
 
 .sendButton {
+  flex-shrink: 0;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   padding: 6px 10px;
   font-size: 16px;
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Tone bar ─────────────────────────────────────────────────────────── */
+
+.toneBar {
+  display: flex;
+  gap: 4px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.toneBtn {
+  flex: 1;
+  padding: 4px 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: none;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.15s;
+}
+
+.toneBtnActive {
+  background: #0067b8;
+  border-color: #0067b8;
+  color: white;
+}
+
+/* ── Límite y badge ──────────────────────────────────────────────────── */
+
+.limitReached {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 12px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.limitReached span {
+  font-size: 24px;
+}
+
+.limitReached p {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0;
+}
+
+.limitReached small {
+  font-size: 11px;
+  color: #888;
+}
+
+.remainingBadge {
+  padding: 4px 12px;
+  font-size: 10px;
+  color: #888;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
 }

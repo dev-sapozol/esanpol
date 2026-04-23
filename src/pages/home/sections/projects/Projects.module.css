@@ -172,6 +172,25 @@
   transition: opacity 0.2s;
 }
 
+.projectCode {
+  margin-top: 15px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  cursor: default;
+  user-select: none;
+  transition: filter 0.25s ease;
+}
+
+.projectCodeBlurred {
+  filter: blur(2.5px);
+  cursor: pointer;
+  user-select: none;
+}
+
+.projectCodeBlurred:hover {
+  filter: blur(4px);
+}
+
 .projectLinkSolid:hover {
   opacity: 0.85;
 }

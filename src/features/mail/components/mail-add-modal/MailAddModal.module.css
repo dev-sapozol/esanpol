@@ -73,3 +73,89 @@
 .closeBtn:hover {
   color: #000;
 }
+
+.existingList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border, #e0e0e0);
+  margin-bottom: 8px;
+}
+
+.existingLabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+}
+
+.existingItem {
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: var(--surface-secondary, #f5f5f5);
+}
+
+.existingEmail {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.limitBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.limitIcon {
+  font-size: 28px;
+}
+
+.limitTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.limitDesc {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.hint {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.5;
+}
+
+.pendingMsg {
+  font-size: 12px;
+  color: #92400e;
+}
+
+.successMsg {
+  font-size: 13px;
+  color: #166534;
+  font-weight: 500;
+}
+
+.errorMsg {
+  font-size: 13px;
+  color: #991b1b;
+}
+
+.unknownMsg {
+  font-size: 13px;
+  color: #6b7280;
+}

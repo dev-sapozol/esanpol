@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, type ReactNode } from "react"
+import { useUserSearch } from "../../hooks/useUserSearch"
 import styles from "../compose/ComposeModal.module.css"
 
 const isValidEmail = (email: string): boolean =>
@@ -27,11 +28,27 @@ export function RecipientField({
 }: RecipientFieldProps) {
   const [inputValue, setInputValue] = useState("")
   const [hasError, setHasError] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const { suggestions, search, clear } = useUserSearch()
 
   useEffect(() => {
     if (autoFocus) inputRef.current?.focus()
   }, [autoFocus])
+
+  // Cierra dropdown al clickar fuera
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowDropdown(false)
+        clear()
+      }
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [clear])
 
   const addEmail = (raw: string) => {
     const trimmed = raw.trim()
@@ -41,6 +58,8 @@ export function RecipientField({
       if (!list.includes(trimmed)) setList([...list, trimmed])
       setInputValue("")
       setHasError(false)
+      setShowDropdown(false)
+      clear()
     } else {
       setHasError(true)
       setTimeout(() => setHasError(false), 500)
@@ -56,6 +75,14 @@ export function RecipientField({
     }
   }
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setInputValue(val)
+    if (hasError) setHasError(false)
+    search(val)
+    setShowDropdown(val.length >= 2)
+  }
+
   const removeChip = (index: number) =>
     setList(list.filter((_, i) => i !== index))
 
@@ -67,11 +94,20 @@ export function RecipientField({
         </span>
       )}
 
-      <div className={styles.fieldBody} onClick={() => inputRef.current?.focus()}>
+      <div
+        className={styles.fieldBody}
+        onClick={() => inputRef.current?.focus()}
+        ref={dropdownRef}
+        style={{ position: "relative" }}
+      >
         {list.map((email, idx) => (
           <span key={idx} className={styles.chip}>
             {email}
-            <button tabIndex={-1} onClick={() => removeChip(idx)} aria-label={`Eliminar ${email}`}>
+            <button
+              tabIndex={-1}
+              onClick={() => removeChip(idx)}
+              aria-label={`Eliminar ${email}`}
+            >
               ×
             </button>
           </span>
@@ -81,15 +117,40 @@ export function RecipientField({
           ref={inputRef}
           className={styles.input}
           value={inputValue}
-          onChange={(e) => {
-            setInputValue(e.target.value)
-            if (hasError) setHasError(false)
-          }}
+          onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onBlur={() => { if (inputValue) addEmail(inputValue) }}
           placeholder={list.length === 0 && !showLabel ? label : ""}
           aria-label={label}
         />
+
+        {/* Dropdown de sugerencias */}
+        {showDropdown && suggestions.length > 0 && (
+          <div className={styles.suggestionsDropdown}>
+            {suggestions.map((s) => (
+              <div
+                key={s.email}
+                className={styles.suggestionItem}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  addEmail(s.email)
+                }}
+              >
+                <div className={styles.suggestionAvatar}>
+                  {s.avatarUrl ? (
+                    <img src={s.avatarUrl} alt={s.name} />
+                  ) : (
+                    <span>{s.name?.charAt(0)?.toUpperCase() ?? "?"}</span>
+                  )}
+                </div>
+                <div className={styles.suggestionInfo}>
+                  <span className={styles.suggestionName}>{s.name} {s.fathername} {s.mothername}</span>
+                  <span className={styles.suggestionEmail}>{s.email}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {rightActions && <div className={styles.rightActions}>{rightActions}</div>}

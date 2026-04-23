@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
 import { getData, getCode } from "country-list"
 import CustomSelect from "../../../components/ui/CustomSelect/CustomSelect"
+import { useBackendWarmup } from "../hooks/useBackendWarmup";
+import { BackendWarmup } from "../../../components/ui/BackendWarmup/BackendWarmup";
+import { useVerifyEmail } from "../../mail/hooks/useVerifyEmail"
 import styles from "./Register.module.css"
 import logo from "../../../assets/images/LogoSPL.webp";
 
@@ -25,6 +28,7 @@ type RegisterProps = {
     passwordButton: string
     emailButton: string
     registerButton: string
+    verifyEmail: string
     validEmail: string
     back: string
   }
@@ -59,11 +63,14 @@ const Register: React.FC<RegisterProps> = ({
   const [codeInput, setCodeInput] = useState("")
   const [codeError, setCodeError] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  const { verifyEmail } = useVerifyEmail()
   const countries = getData()
-  const [country, setCountry] = useState("")
+  const { warmingUp, start, stop } = useBackendWarmup(4000);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    start();
 
     const isValid = /^[a-zA-Z0-9._-]+$/.test(emailPrefix.trim())
     if (!isValid) {
@@ -91,6 +98,7 @@ const Register: React.FC<RegisterProps> = ({
       onError(err.message)
     }
 
+    stop();
     setLoading(false)
   }
 
@@ -137,13 +145,23 @@ const Register: React.FC<RegisterProps> = ({
       const res = await fetch(registerEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, ...registerData, age, lenguage: language, timezone }),
+        body: JSON.stringify({
+          email, password, ...registerData,
+          recovery_email: registerData.recovery_email.trim() || null,
+          age, lenguage: language, timezone
+        }),
       })
 
       const data = await res.json()
 
       if (data?.token) {
         sessionStorage.setItem("access_token", data.token)
+
+        if (registerData.recovery_email.trim()) {
+          verifyEmail(registerData.recovery_email.trim()).catch(() => { })
+        }
+
+
         window.location.href = "/mail"
       } else {
         onError(data?.message)
@@ -164,6 +182,7 @@ const Register: React.FC<RegisterProps> = ({
 
   return (
     <div className={styles.login}>
+      <BackendWarmup visible={warmingUp} />
       <AnimatePresence mode="wait">
 
         {step === "email" && (
@@ -349,15 +368,18 @@ const Register: React.FC<RegisterProps> = ({
 
             <div className={styles.field}>
               <input
-                type="email"
-                placeholder=" "
-                value={registerData.recovery_email}
-                onChange={(e) =>
-                  setRegisterData({ ...registerData, recovery_email: e.target.value })
-                }
+                type="email" placeholder=" " value={registerData.recovery_email}
+                onChange={(e) => setRegisterData({ ...registerData, recovery_email: e.target.value })}
               />
-              <label>Recovery email (Gmail, Outlook…)</label>
+              <label>Recovery email (optional — Gmail, Outlook…)</label>
             </div>
+
+            {registerData.recovery_email.trim() && (
+              <p className={styles.recoveryNote}>
+                AWS will send you a verification email to this address so you can
+                send emails from Esanpol to Gmail or Outlook.
+              </p>
+            )}
 
             <button disabled={loading}>{labels.registerButton}</button>
           </motion.form>

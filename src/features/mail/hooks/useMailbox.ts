@@ -17,6 +17,8 @@ const preloadMailbox = gql`
         email
         avatar_url
         role
+        ai_messages_used
+        ai_messages_remaining
       }
       system_folders {
         id

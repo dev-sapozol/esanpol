@@ -25,17 +25,28 @@
 }
 
 .sidebarAISection {
-  width: auto;
-  background-color: white;
+  width: 280px;
+  min-width: 0;
+  max-width: 280px;
+  overflow: hidden;
   flex-shrink: 0;
+  background-color: white;
   z-index: 10;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; 
 }
 
 /* Collapsed sidebar state */
 .mailContainer.sidebarCollapsed .sidebarSection {
   width: 64px;
+}
+
+.sidebarAISection.collapsed {
+  width: 48px;
+  max-width: 48px;
 }
 
 .mainContent {

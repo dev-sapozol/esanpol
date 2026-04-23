@@ -3,9 +3,11 @@
 import { projects } from "../../data";
 import { FadeIn } from "../shared/FadeIn";
 import { type Project } from "../shared/types";
+import { useState } from "react";
 import styles from "./Projects.module.css";
 
 function ProjectRow({ p, i }: { p: Project; i: number }) {
+  const [codeVisible, setCodeVisible] = useState(false);
   return (
     <div className={styles.projectRow}>
       <div className={styles.projectAccent} />
@@ -45,6 +47,15 @@ function ProjectRow({ p, i }: { p: Project; i: number }) {
           <a href={p.live} target="_blank" rel="noreferrer" className={styles.projectLinkSolid}>
             Live ↗
           </a>
+        )}
+        {p.code && (
+          <p
+            className={`${styles.projectCode} ${!codeVisible ? styles.projectCodeBlurred : ""}`}
+            onClick={() => setCodeVisible(true)}
+            title={!codeVisible ? "Click para ver el código" : undefined}
+          >
+            Code: {p.code}
+          </p>
         )}
       </div>
     </div>
