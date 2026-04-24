@@ -4,8 +4,8 @@ import type React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { useBackendWarmup } from "../hooks/useBackendWarmup";
-import { BackendWarmup } from "../../../components/ui/BackendWarmup/BackendWarmup";
+import { useBackendWarmup } from "../hooks/useBackendWarmup"
+import { BackendWarmup } from "../../../components/ui/BackendWarmup/BackendWarmup"
 import styles from "./Recovery.module.css"
 import logo from "../../../assets/images/LogoSPL.webp"
 
@@ -39,7 +39,24 @@ const Recovery: React.FC<RecoveryProps> = ({
   const [loading, setLoading] = useState(false)
   const [emailPrefix, setEmailPrefix] = useState("")
   const email = emailPrefix.trim() + "@esanpol.xyz"
-  const { warmingUp, start, stop } = useBackendWarmup(4000);
+
+  // --- Estrategia Recovery ---
+  // El backend puede tardar en arrancar, pero en Recovery no podemos "entretener"
+  // al usuario con un formulario largo como en Register.
+  //
+  // Solución: UI optimista.
+  // Cuando el usuario envía el email, mostramos INMEDIATAMENTE el step del OTP
+  // con un mensaje de "revisa tu correo" sin esperar la respuesta del backend.
+  // La petición al backend corre en paralelo en segundo plano (fire and forget).
+  // Si falla, mostramos error desde el step de OTP (sin volver al email).
+  //
+  // El overlay de slides solo aparece si el usuario intenta verificar el OTP
+  // antes de que el backend haya respondido, lo cual es muy improbable porque
+  // el usuario necesita abrir su correo, buscar el código, y volver.
+  const { warmingUp, start, stop } = useBackendWarmup(4000)
+
+  // Referencia para trackear si el email fue enviado realmente
+  const [emailSent, setEmailSent] = useState(false)
 
   useEffect(() => {
     if (resendCooldown <= 0) return
@@ -47,26 +64,39 @@ const Recovery: React.FC<RecoveryProps> = ({
     return () => clearTimeout(t)
   }, [resendCooldown])
 
+  // --- Paso 1: Email — transición optimista ---
+  // Se va al step de OTP inmediatamente; el fetch corre en segundo plano.
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    start();
-    setLoading(true)
+
+    // Transición inmediata — el usuario ve la pantalla de OTP al instante
+    setStep("otp")
+    setResendCooldown(60)
+    setEmailSent(false)
+
+    // El fetch corre en segundo plano sin bloquear la UI
     try {
       await fetch(requestPasswordResetEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       })
-      setStep("otp")
-      setResendCooldown(60)
-    } catch (err: any) { onError(err.message) }
-    stop();
-    setLoading(false)
+      setEmailSent(true)
+    } catch (err: any) {
+      // Si falla el envío, lo indicamos desde la pantalla de OTP
+      // (no volvemos al email para no interrumpir el flujo)
+      setOtpError("We couldn't send the code. Please try again.")
+    }
   }
 
+  // --- Paso 2: Verificar OTP ---
+  // Aquí sí necesitamos el backend. Si el usuario llega aquí muy rápido
+  // (antes de que el backend arranque), el overlay de slides aparece.
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    start() // Iniciamos el warmup: si tarda >4s aparecen los slides
+
     try {
       const res = await fetch(verifyResetOtpEndpoint, {
         method: "POST",
@@ -74,25 +104,38 @@ const Recovery: React.FC<RecoveryProps> = ({
         body: JSON.stringify({ email, otp }),
       })
       const data = await res.json()
+
+      stop() // El backend respondió, ocultamos el overlay
       if (data?.success) {
         setStep("password")
       } else {
         setOtpError(data?.error ?? "Invalid code")
       }
-    } catch (err: any) { onError(err.message) }
+    } catch (err: any) {
+      stop()
+      onError(err.message)
+    }
+
     setLoading(false)
   }
 
   const handleResend = async () => {
     if (resendCooldown > 0) return
-    await fetch(requestPasswordResetEndpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    })
-    setResendCooldown(60)
+    setEmailSent(false)
     setOtp("")
     setOtpError(null)
+    setResendCooldown(60)
+
+    try {
+      await fetch(requestPasswordResetEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+      setEmailSent(true)
+    } catch (err: any) {
+      setOtpError("We couldn't resend the code. Please try again.")
+    }
   }
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -100,6 +143,7 @@ const Recovery: React.FC<RecoveryProps> = ({
     if (password.length < 8) { onError("Password must be at least 8 characters."); return }
     if (password !== confirmPassword) { onError("Passwords do not match."); return }
     setLoading(true)
+
     try {
       const res = await fetch(resetPasswordEndpoint, {
         method: "POST",
@@ -110,6 +154,7 @@ const Recovery: React.FC<RecoveryProps> = ({
       if (data?.success) navigate("/auth/login")
       else onError(data?.error ?? "Something went wrong")
     } catch (err: any) { onError(err.message) }
+
     setLoading(false)
   }
 
@@ -122,6 +167,7 @@ const Recovery: React.FC<RecoveryProps> = ({
 
   return (
     <div className={styles.recovery}>
+      {/* Overlay de slides — solo aparece si el OTP tarda mucho en verificarse */}
       <BackendWarmup visible={warmingUp} />
       <AnimatePresence mode="wait">
 
@@ -176,7 +222,14 @@ const Recovery: React.FC<RecoveryProps> = ({
 
             <div className={styles.emailRow}>
               <h3>Check your recovery email</h3>
-              <p>We sent a 6-digit code to your recovery email</p>
+              {/* Mensaje optimista: aparece inmediatamente aunque el backend aún esté arrancando */}
+              <p>
+                We sent a 6-digit code to your recovery email.
+                {!emailSent && (
+                  // Indicador sutil de que el envío aún está en proceso (no un spinner grande)
+                  <span className={styles.sendingNote}> Sending…</span>
+                )}
+              </p>
             </div>
 
             <div className={styles.field}>
@@ -208,12 +261,10 @@ const Recovery: React.FC<RecoveryProps> = ({
                   onClick={resendCooldown > 0 ? undefined : handleResend}
                   style={{
                     cursor: resendCooldown > 0 ? "default" : "pointer",
-                    color: resendCooldown > 0 ? "#999" : "#1a73e8"
+                    color: resendCooldown > 0 ? "#999" : "#1a73e8",
                   }}
                 >
-                  {resendCooldown > 0
-                    ? `Resend in ${resendCooldown}s`
-                    : "Resend code"}
+                  {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend code"}
                 </a>
               </span>
             </div>
@@ -231,9 +282,7 @@ const Recovery: React.FC<RecoveryProps> = ({
             onSubmit={handlePasswordSubmit}
             className={styles.form}
           >
-            <div className={styles.backArrow} onClick={() => setStep("email")}>
-              ←
-            </div>
+            <div className={styles.backArrow} onClick={() => setStep("email")}>←</div>
 
             <div className={styles.logoRow}>
               <img className={styles.logo} src={logo} alt="Logo SPL" />
