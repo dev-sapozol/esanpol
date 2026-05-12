@@ -23,25 +23,43 @@ export default function Contact() {
 
       <FadeIn delay={0.2}>
         <div className={styles.contactActions}>
-          <a href={`mailto:${profile.email}`} className={styles.contactBtnPrimary}>
+          <a
+            href={`mailto:${profile.email}`}
+            className={styles.contactBtnPrimary}
+          >
             Send email ↗
           </a>
-          {[
-            { label: "LinkedIn", href: profile.linkedin },
-            { label: "GitHub", href: profile.github },
-          ].map(({ label, href }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.contactBtnGhost}
-            >
-              {label}
-            </a>
-          ))}
+
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.contactBtnGhost}
+          >
+            LinkedIn
+          </a>
+
+          <a
+            href={profile.github}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.contactBtnGhost}
+          >
+            GitHub
+          </a>
+
+          <a
+            href="/cv-sebastian.pdf"
+            download="CV_Sebastian_Pozo.pdf"
+            className={`${styles.contactBtnGhost} ${styles.cvButton}`}
+          >
+            CV
+          </a>
         </div>
-        <div className={styles.contactEmail}>{profile.email}</div>
+
+        <div className={styles.contactEmail}>
+          {profile.email}
+        </div>
       </FadeIn>
     </section>
   );

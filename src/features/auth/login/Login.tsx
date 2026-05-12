@@ -27,7 +27,6 @@ const Login: React.FC<LoginProps> = ({
   verifyEmailEndpoint,
   loginEndpoint,
   labels,
-  onSuccess,
   onError
 }) => {
 
@@ -56,8 +55,12 @@ const Login: React.FC<LoginProps> = ({
       } else {
         onError(labels.invalidEmail);
       }
-    } catch (err: any) {
-      onError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        onError(err.message)
+      } else {
+        onError("Something went wrong")
+      }
     }
 
     stop();
@@ -83,8 +86,12 @@ const Login: React.FC<LoginProps> = ({
       } else {
         onError(data?.message);
       }
-    } catch (err: any) {
-      onError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        onError(err.message)
+      } else {
+        onError("Something went wrong")
+      }
     }
 
     setLoading(false);

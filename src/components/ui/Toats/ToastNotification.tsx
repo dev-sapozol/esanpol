@@ -23,15 +23,22 @@ const ToastNotification: React.FC<ToastNotificationProps> = ({
       const ctx = new AudioContext()
       const o = ctx.createOscillator()
       const g = ctx.createGain()
+
       o.connect(g)
       g.connect(ctx.destination)
+
       o.frequency.setValueAtTime(880, ctx.currentTime)
       o.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15)
+
       g.gain.setValueAtTime(0.3, ctx.currentTime)
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
+
       o.start(ctx.currentTime)
       o.stop(ctx.currentTime + 0.3)
-    } catch (_) { }
+
+    } catch {
+      // Ignore audio errors
+    }
 
     const fadeTimer = setTimeout(() => setVisible(false), duration - 400)
     const closeTimer = setTimeout(onClose, duration)

@@ -2,8 +2,9 @@
 
 import { useState, useEffect, lazy, Suspense } from "react";
 import { technologies } from "./data";
-import { useNavigate } from "react-router-dom";
+import { PROJECTS } from "./projects";
 import baseStyles from "./Home.module.css";
+import { useBackendPrewarm } from "./hooks/useBackendPrewarm";
 
 const Hero = lazy(() => import("./sections/hero/Hero"));
 const About = lazy(() => import("./sections/about/About"));
@@ -32,10 +33,11 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("hero");
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const esanpol = `/auth/`;
 
-  // Scroll → blur nav
+  // Se dispara 1.5s después del primer render, una vez por sesión de pestaña.
+  // Extrae los healthEndpoints directamente de PROJECTS
+  useBackendPrewarm(PROJECTS.map((p) => p.healthEndpoint));
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
@@ -62,11 +64,18 @@ export default function Home() {
 
   return (
     <>
-      {/* NAV — lives here because it needs scroll + active state */}
-      <nav className={scrolled ? `${baseStyles.nav} ${baseStyles.scrolled}` : baseStyles.nav}>
+      <nav className={`${baseStyles.nav} ${scrolled ? baseStyles.scrolled : ""}`}>
         <div className={baseStyles.navLogo}>SP.</div>
 
-        <div className={menuOpen ? `${baseStyles.navLinks} ${baseStyles.open}` : baseStyles.navLinks}>
+        <div
+          className={[
+            baseStyles.navLinks,
+            menuOpen ? baseStyles.open : "",
+            scrolled ? baseStyles.menuScrolled : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
           {navLinks.map((id) => (
             <a
               key={id}
@@ -77,16 +86,6 @@ export default function Home() {
               {id}
             </a>
           ))}
-          <button
-            className={baseStyles.navCta}
-            onClick={() => {
-              setMenuOpen(false);
-              navigate(esanpol);
-            }}
-          >
-
-            Esanpol →
-          </button>
         </div>
 
         <div
@@ -101,7 +100,6 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* SECTIONS — each owns its styles */}
       <Suspense fallback={null}>
         <Hero />
         <Marquee items={allTech} />
@@ -111,10 +109,22 @@ export default function Home() {
         <Contact />
       </Suspense>
 
-      {/* FOOTER */}
       <footer className={baseStyles.footer}>
         <span>© 2025 Sebastian Pozo Lucano</span>
         <span>Lima, Perú</span>
+        {/* 
+          Footer dinámico: 1 proyecto → enlace clicable.
+          2+ proyectos → solo nombres en texto, sin destacar ninguno.
+        */}
+        {PROJECTS.length === 1 ? (
+          <span>
+            <a href={PROJECTS[0].url} className={baseStyles.footerLink}>
+              {PROJECTS[0].name}
+            </a>
+          </span>
+        ) : PROJECTS.length > 1 ? (
+          <span>{PROJECTS.map((p) => p.name).join(" · ")}</span>
+        ) : null}
         <span>Built with React</span>
       </footer>
     </>

@@ -172,11 +172,13 @@ a {
   }
 
   .navLinks.open {
+    color: #ffffff;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
     position: fixed;
     inset: 60px 0 0 0;
-    background: rgba(13, 15, 20, 0.97);
+    background-color: #0a0a0a;  
     padding: 3rem 2rem;
     gap: 2rem;
     z-index: 499;
@@ -184,8 +186,24 @@ a {
     backdrop-filter: blur(20px);
   }
 
+  .navLinks.open.menuScrolled {
+    background-color: #111111;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
   .navLinks.open a {
     font-size: 1rem;
+    color: #ffffff; 
+  }
+
+  .navLinks.open .navCta {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+  }
+
+  .navLinks.open .navCta:hover {
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .hamburger {

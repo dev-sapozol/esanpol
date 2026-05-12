@@ -1,4 +1,5 @@
 import logo from "../../assets/images/LogoSPL.webp";
+import cv from "../../../public/CV_SebastianPozo.pdf";
 
 export const profile = {
   name: "Sebastian Pozo",
@@ -7,6 +8,7 @@ export const profile = {
     "Full Stack developer, focused on building scalable systems, database modeling, process automation, and AWS cloud integrations. Experienced in handling complex data flows and asynchronous processes. Strong ability to solve technical challenges and deliver efficient, scalable solutions..",
   github: "https://github.com/dev-sapozol",
   linkedin: "https://www.linkedin.com/in/sebastianpozolucano",
+  cv: cv,
   email: "sebastian.pozol14@gmail.com",
 };
 

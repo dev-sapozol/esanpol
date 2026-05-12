@@ -42,11 +42,8 @@ const Register: React.FC<RegisterProps> = ({
   registerEndpoint,
   labels,
   accessCode,
-  onSuccess,
   onError,
 }) => {
-  // --- Cambio clave: el primer step ahora es "register" (datos personales), no "email" ---
-  // El usuario llena el form largo primero, dándole tiempo al backend de arrancar.
   const [step, setStep] = useState<"register" | "email" | "password" | "code">("register")
 
   const [emailPrefix, setEmailPrefix] = useState("")
@@ -71,23 +68,12 @@ const Register: React.FC<RegisterProps> = ({
 
   const { verifyEmail } = useVerifyEmail()
   const countries = getData()
-
-  // El warmup sigue siendo el fallback por si el usuario llenó el form muy rápido
   const { warmingUp, start, stop } = useBackendWarmup(4000)
-
-  // --- Paso 1: El usuario completa los datos personales y avanza al email ---
-  // No hay llamada al backend aquí, solo navegación local.
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Iniciamos el warmup *ahora* — cuando el usuario pase a llenar el email
-    // y luego la contraseña, ya habrá pasado tiempo suficiente para que el backend arranque.
     start()
     setStep("email")
   }
-
-  // --- Paso 2: Verificación del email (primer contacto real con el backend) ---
-  // Para este momento el usuario ya tardó llenando el form, así que el backend
-  // probablemente ya arrancó. El overlay solo aparece si aún falta tiempo.
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -111,19 +97,21 @@ const Register: React.FC<RegisterProps> = ({
       if (data?.exists) {
         setEmailError("exists")
       } else {
-        // El backend respondió, ya no necesitamos el overlay de warmup
         stop()
         setStep("password")
       }
-    } catch (err: any) {
-      onError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        onError(err.message)
+      } else {
+        onError("Something went wrong")
+      }
     }
 
-    stop() // Siempre detener el warmup al obtener respuesta
+    stop()
     setLoading(false)
   }
 
-  // --- Paso 3: Contraseña ---
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password.length < 8) {
@@ -133,7 +121,6 @@ const Register: React.FC<RegisterProps> = ({
     setStep("code")
   }
 
-  // --- Paso 4: Código de acceso y registro final ---
   const handleCodeSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (codeInput !== accessCode) {
@@ -178,15 +165,19 @@ const Register: React.FC<RegisterProps> = ({
         sessionStorage.setItem("access_token", data.token)
 
         if (registerData.recovery_email.trim()) {
-          verifyEmail(registerData.recovery_email.trim()).catch(() => {})
+          verifyEmail(registerData.recovery_email.trim()).catch(() => { })
         }
 
         window.location.href = "/mail"
       } else {
         onError(data?.message)
       }
-    } catch (err: any) {
-      onError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        onError(err.message)
+      } else {
+        onError("Something went wrong")
+      }
     }
 
     setLoading(false)

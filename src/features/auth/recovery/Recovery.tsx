@@ -39,23 +39,7 @@ const Recovery: React.FC<RecoveryProps> = ({
   const [loading, setLoading] = useState(false)
   const [emailPrefix, setEmailPrefix] = useState("")
   const email = emailPrefix.trim() + "@esanpol.xyz"
-
-  // --- Estrategia Recovery ---
-  // El backend puede tardar en arrancar, pero en Recovery no podemos "entretener"
-  // al usuario con un formulario largo como en Register.
-  //
-  // Solución: UI optimista.
-  // Cuando el usuario envía el email, mostramos INMEDIATAMENTE el step del OTP
-  // con un mensaje de "revisa tu correo" sin esperar la respuesta del backend.
-  // La petición al backend corre en paralelo en segundo plano (fire and forget).
-  // Si falla, mostramos error desde el step de OTP (sin volver al email).
-  //
-  // El overlay de slides solo aparece si el usuario intenta verificar el OTP
-  // antes de que el backend haya respondido, lo cual es muy improbable porque
-  // el usuario necesita abrir su correo, buscar el código, y volver.
   const { warmingUp, start, stop } = useBackendWarmup(4000)
-
-  // Referencia para trackear si el email fue enviado realmente
   const [emailSent, setEmailSent] = useState(false)
 
   useEffect(() => {
@@ -64,17 +48,13 @@ const Recovery: React.FC<RecoveryProps> = ({
     return () => clearTimeout(t)
   }, [resendCooldown])
 
-  // --- Paso 1: Email — transición optimista ---
-  // Se va al step de OTP inmediatamente; el fetch corre en segundo plano.
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Transición inmediata — el usuario ve la pantalla de OTP al instante
     setStep("otp")
     setResendCooldown(60)
     setEmailSent(false)
 
-    // El fetch corre en segundo plano sin bloquear la UI
     try {
       await fetch(requestPasswordResetEndpoint, {
         method: "POST",
@@ -82,20 +62,15 @@ const Recovery: React.FC<RecoveryProps> = ({
         body: JSON.stringify({ email }),
       })
       setEmailSent(true)
-    } catch (err: any) {
-      // Si falla el envío, lo indicamos desde la pantalla de OTP
-      // (no volvemos al email para no interrumpir el flujo)
+    } catch {
       setOtpError("We couldn't send the code. Please try again.")
     }
   }
 
-  // --- Paso 2: Verificar OTP ---
-  // Aquí sí necesitamos el backend. Si el usuario llega aquí muy rápido
-  // (antes de que el backend arranque), el overlay de slides aparece.
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    start() // Iniciamos el warmup: si tarda >4s aparecen los slides
+    start()
 
     try {
       const res = await fetch(verifyResetOtpEndpoint, {
@@ -105,15 +80,18 @@ const Recovery: React.FC<RecoveryProps> = ({
       })
       const data = await res.json()
 
-      stop() // El backend respondió, ocultamos el overlay
+      stop()
       if (data?.success) {
         setStep("password")
       } else {
         setOtpError(data?.error ?? "Invalid code")
       }
-    } catch (err: any) {
-      stop()
-      onError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        onError(err.message)
+      } else {
+        onError("Something went wrong")
+      }
     }
 
     setLoading(false)
@@ -133,7 +111,7 @@ const Recovery: React.FC<RecoveryProps> = ({
         body: JSON.stringify({ email }),
       })
       setEmailSent(true)
-    } catch (err: any) {
+    } catch {
       setOtpError("We couldn't resend the code. Please try again.")
     }
   }
@@ -153,7 +131,13 @@ const Recovery: React.FC<RecoveryProps> = ({
       const data = await res.json()
       if (data?.success) navigate("/auth/login")
       else onError(data?.error ?? "Something went wrong")
-    } catch (err: any) { onError(err.message) }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        onError(err.message)
+      } else {
+        onError("Something went wrong")
+      }
+    }
 
     setLoading(false)
   }
@@ -222,11 +206,10 @@ const Recovery: React.FC<RecoveryProps> = ({
 
             <div className={styles.emailRow}>
               <h3>Check your recovery email</h3>
-              {/* Mensaje optimista: aparece inmediatamente aunque el backend aún esté arrancando */}
+              {/* Mensaje espera backend*/}
               <p>
                 We sent a 6-digit code to your recovery email.
                 {!emailSent && (
-                  // Indicador sutil de que el envío aún está en proceso (no un spinner grande)
                   <span className={styles.sendingNote}> Sending…</span>
                 )}
               </p>
