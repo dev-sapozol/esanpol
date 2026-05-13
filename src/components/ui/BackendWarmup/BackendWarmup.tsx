@@ -9,7 +9,7 @@ const SLIDES = [
     icon: "✉️",
     title: "Institutional Email",
     description:
-      "Esanpol gives you an @esanpol.xyz email so all project communication stays centralized and professional.",
+      "Esanpol gives you an @esanpol.lat email so all project communication stays centralized and professional.",
   },
   {
     icon: "🔒",

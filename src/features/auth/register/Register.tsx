@@ -48,7 +48,7 @@ const Register: React.FC<RegisterProps> = ({
 
   const [emailPrefix, setEmailPrefix] = useState("")
   const [emailError, setEmailError] = useState<"exists" | "invalid" | null>(null)
-  const email = emailPrefix.trim() + "@esanpol.xyz"
+  const email = emailPrefix.trim() + "@esanpol.lat"
 
   const [password, setPassword] = useState("")
   const [registerData, setRegisterData] = useState({
@@ -351,7 +351,7 @@ const Register: React.FC<RegisterProps> = ({
                   }}
                   required
                 />
-                <span className={styles.emailSuffix}>@esanpol.xyz</span>
+                <span className={styles.emailSuffix}>@esanpol.lat</span>
                 <label className={styles.emailLabel}>{labels.emailPlaceholder}</label>
               </div>
 

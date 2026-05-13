@@ -38,7 +38,7 @@ const Recovery: React.FC<RecoveryProps> = ({
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [emailPrefix, setEmailPrefix] = useState("")
-  const email = emailPrefix.trim() + "@esanpol.xyz"
+  const email = emailPrefix.trim() + "@esanpol.lat"
   const { warmingUp, start, stop } = useBackendWarmup(4000)
   const [emailSent, setEmailSent] = useState(false)
 
@@ -181,7 +181,7 @@ const Recovery: React.FC<RecoveryProps> = ({
                   onChange={(e) => setEmailPrefix(e.target.value.replace(/[^a-zA-Z0-9._-]/g, ""))}
                   required
                 />
-                <span className={styles.emailSuffix}>@esanpol.xyz</span>
+                <span className={styles.emailSuffix}>@esanpol.lat</span>
                 <label className={styles.emailLabel}>{labels.emailPlaceholder}</label>
               </div>
             </div>
