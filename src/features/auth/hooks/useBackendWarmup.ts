@@ -1,17 +1,44 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 
 export function useBackendWarmup(delayMs = 4000) {
   const [warmingUp, setWarmingUp] = useState(false);
+
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const start = useCallback(() => {
-    timerRef.current = setTimeout(() => setWarmingUp(true), delayMs);
+    // Limpia timers anteriores
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = setTimeout(() => {
+      setWarmingUp(true);
+    }, delayMs);
   }, [delayMs]);
 
   const stop = useCallback(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    // Cancela timer activo
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+
+    // Oculta overlay
     setWarmingUp(false);
   }, []);
 
-  return { warmingUp, start, stop };
+  // Cleanup al desmontar componente
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
+  return {
+    warmingUp,
+    start,
+    stop,
+  };
 }
