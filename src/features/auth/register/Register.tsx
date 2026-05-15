@@ -71,7 +71,6 @@ const Register: React.FC<RegisterProps> = ({
   const { warmingUp, start, stop } = useBackendWarmup(4000)
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    start()
     setStep("email")
   }
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -85,6 +84,7 @@ const Register: React.FC<RegisterProps> = ({
 
     setLoading(true)
     setEmailError(null)
+    start()
 
     try {
       const res = await fetch(verifyEmailEndpoint, {
@@ -92,24 +92,21 @@ const Register: React.FC<RegisterProps> = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       })
+
       const data = await res.json()
 
       if (data?.exists) {
         setEmailError("exists")
-      } else {
-        stop()
-        setStep("password")
+        return
       }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        onError(err.message)
-      } else {
-        onError("Something went wrong")
-      }
-    }
 
-    stop()
-    setLoading(false)
+      setStep("password")
+    } catch (err) {
+      onError(err instanceof Error ? err.message : "Something went wrong")
+    } finally {
+      stop()
+      setLoading(false)
+    }
   }
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -298,7 +295,7 @@ const Register: React.FC<RegisterProps> = ({
                 value={registerData.recovery_email}
                 onChange={(e) => setRegisterData({ ...registerData, recovery_email: e.target.value })}
               />
-              <label>Recovery email (optional — Gmail, Outlook…)</label>
+              <label>Recovery email</label>
             </div>
 
             {registerData.recovery_email.trim() && (
