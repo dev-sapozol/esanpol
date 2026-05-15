@@ -1,8 +1,8 @@
 import { gql, useMutation } from "@apollo/client";
 
 const verify_email = gql`
-  mutation VerifyEmail($email: String!) {
-    verifyEmail(email: $email) {
+  mutation VerifyExternalEmail($email: String!) {
+    verifyExternalEmail(email: $email) {
       status
       message
     }
@@ -20,7 +20,7 @@ export const useVerifyEmail = () => {
       variables: { email },
     });
 
-    return result.data?.verifyEmail;
+    return result.data?.verifyExternalEmail;
   };
 
   return { verifyEmail, loading, error, data };

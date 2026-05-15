@@ -1,37 +1,27 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 
 const check_email_verification = gql`
-  query CheckEmailVerification($email: String!) {
-    checkEmailVerification(email: $email) {
+  mutation CheckExternalEmail($email: String!) {
+    checkExternalEmail(email: $email) {
       status
       message
     }
   }
 `;
 
-function toSnakeCaseInput(input: any) {
-  const snake: any = {
-    email: input.email,
-  };
-
-  return snake;
-}
-
 export const useCheckEmailVerification = () => {
-  const { data, loading, error, refetch } = useQuery(
-    check_email_verification,
-    {
-      skip: true,
-    }
-  )
+  const [checkMutation, { loading, error, data }] =
+    useMutation(check_email_verification);
 
   const checkEmailVerification = async (email: string) => {
-    if (!email.trim()) return
+    if (!email.trim()) return;
 
-    const result = await refetch({ email })
+    const result = await checkMutation({
+      variables: { email },
+    });
 
-    return result.data?.checkEmailVerification
-  }
+    return result.data?.checkExternalEmail;
+  };
 
-  return { checkEmailVerification, loading, error, data }
-}
+  return { checkEmailVerification, loading, error, data };
+};

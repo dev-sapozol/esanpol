@@ -1,4 +1,3 @@
-import { useState, useCallback } from "react"
 import { gql, useQuery } from "@apollo/client"
 
 const LIST_EXTERNAL_EMAILS = gql`
