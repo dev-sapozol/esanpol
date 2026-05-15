@@ -283,9 +283,9 @@ const Register: React.FC<RegisterProps> = ({
               value={registerData.gender}
               onChange={(val) => setRegisterData({ ...registerData, gender: val })}
               options={[
-                { value: "male", label: "Male" },
-                { value: "female", label: "Female" },
-                { value: "other", label: "Other" },
+                { value: "MALE", label: "Male" },
+                { value: "FEMALE", label: "Female" },
+                { value: "OTHER", label: "Other" },
               ]}
               label={labels.genderPlaceholder}
               required
